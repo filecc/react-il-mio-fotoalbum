@@ -3,6 +3,7 @@ import { Result, validationResult } from "express-validator";
 import CustomError from "../lib/CustomErrorClass";
 import { comparePassword, generateJwtToken, hashPassword } from "../lib/utils/functions";
 import { PrismaClient } from "@prisma/client";
+import jwt from 'jsonwebtoken'
 
 const prisma = new PrismaClient()
 
@@ -37,4 +38,21 @@ export async function login(req: Request, res: Response, next: NextFunction){
 
 export async function logout(req: Request, res: Response, next: NextFunction){
     res.clearCookie('fa-token').json({ message: 'Logged out successfully.' })
+}
+
+export async function isLogged(req: Request, res: Response, next: NextFunction){
+    const token = req.cookies['fa-token']
+    if(!token){
+        res.json({result: false})
+        return
+    }
+    if(!jwt.verify(token, process.env.JWT_SECRET as string)){
+        res.json({result: false})
+        return
+    } else {
+        res.json({result: true})
+        return
+    }
+   
+    
 }

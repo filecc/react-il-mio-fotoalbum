@@ -1,29 +1,38 @@
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
+import { UserContext } from "./lib/context/UserContext";
 
-function classNames (...classes: string[]) {
-    return classes.filter(Boolean).join(' ')
-}
 export default function Layout({ children }: { children: React.ReactNode }) {
-    const darkModePreference = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const [darkModeActive, setDarkModeActive] = useState(darkModePreference);
-   
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => {
-        if (darkModePreference) {
-            setDarkModeActive(true)
-        } else {
-            setDarkModeActive(false)
-        }
-    })
+  const [isLogged, setIsLogged] = useState(false);
+  
+
+
+  useEffect(() => {
+    async function isUserLoggedIn() {
+      const res = await fetch("http://localhost:4000/user/isLogged");
+      const data = await res.json();
+     
+      if (data.result) {
+        setIsLogged(true);
+      } else {
+        setIsLogged(false);
+      }
+    }
+
+    isUserLoggedIn();
+  });
 
   return (
-    <main className={classNames(
-        darkModeActive ? 'dark text-foreground bg-background' : '',
-        'min-h-[100dvh] w-full flex flex-col items-center'
-    )}>
-      <Navbar />
-      {children}
-    </main>
+    <UserContext.Provider value={isLogged}>
+      <main
+        className="min-h-[100dvh]"
+      >
+        <Navbar />
+        <div className="w-full min-h-full flex flex-col items-center">
+        {children}
+        </div>
+        
+      </main>
+    </UserContext.Provider>
   );
 }
