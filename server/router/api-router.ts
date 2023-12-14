@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import { index, store } from '../controller/photo-controller';
 import notFound from '../middlewares/not-found';
 import { checkSchema } from 'express-validator';

@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import erroHandler from './middlewares/errors';
+import { userRouter } from './router/user-router';
 const express = require('express')
 
 const app = express();
@@ -26,7 +27,9 @@ app.get('/', (req: Request, res: Response) => {
     res.json('Api available at /api!')
     }
 )
+app.use('/user', userRouter)
 app.use('/api', apiRouter);
+
 app.use(notFound)
 app.use(erroHandler)
 
