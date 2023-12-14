@@ -16,6 +16,8 @@ model Photo {
   description String @db.Text
   visible Boolean @default(true)
   categories Category[]
+  author User @relation(fields: [authorId], references: [id])
+  authorId String
   created_at DateTime @default(now())
 }
 
@@ -23,4 +25,14 @@ model Category {
   id String @id @default(uuid())
   name String @db.VarChar(255) @unique
   photos Photo[]
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  password  String
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  photos    Photo[]
 }

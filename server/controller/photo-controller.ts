@@ -3,16 +3,20 @@ import { PrismaClient } from "@prisma/client";
 import { PhotoClass } from "../lib/PhotoClass";
 import CustomError from "../lib/CustomErrorClass";
 import { Result, validationResult } from "express-validator";
-
-const express = require('express');
 const prisma = new PrismaClient()
 
 
 export async function index(req: Request, res: Response, next: NextFunction){
+
     const photos = await prisma.photo.findMany({
-        include: { categories: {
-            select: { name: true }
-        }},
+        include: { 
+            categories: {
+                select: { name: true }
+             },
+            author: {
+                select: { name: true, email: true, id: true}
+            }
+    },
         orderBy: { created_at: 'desc'}
     })
     if (!photos || photos.length === 0) {
@@ -26,7 +30,8 @@ export async function index(req: Request, res: Response, next: NextFunction){
             description: photo.description,
             visible: photo.visible,
             created_at: photo.created_at,
-            categories: photo.categories.map(category => category.name)
+            categories: photo.categories.map(category => category.name),
+            author: photo.author
         }
     })
     res.json(mappedPhotos)
@@ -43,12 +48,19 @@ export async function store(req: Request, res: Response, next: NextFunction){
 
     await prisma.photo.create({
         data: {
+            author: {
+                connect: {
+                    id: '162d20b6-9a7e-11ee-8050-30d28b42ab91'
+                }
+            },
             title: photo.title,
             description: photo.description,
             visible: photo.visible,
             categories: {
                 connectOrCreate: photo.categories.map((category: string) => {
-                    return { where: { name: category}, create: { name: category} }
+                    return { 
+                        where: { name: category}, 
+                        create: { name: category} }
                 })
             }
         },
@@ -59,6 +71,9 @@ export async function store(req: Request, res: Response, next: NextFunction){
             visible: true,
             categories: {
                 select: { name: true }
+            },
+            author: {
+                select: { name: true, email: true, id: true}
             }
         }
     })
