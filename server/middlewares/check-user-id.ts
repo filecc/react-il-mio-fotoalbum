@@ -19,10 +19,17 @@ export default async function checkUserID(req: Request, res: Response, next: Nex
     }
     if(id){
         const photo = await prisma.photo.findFirst({
-            where: { id: id, authorId: user_id }
+            where: { id: id}
         })
         if(!photo){
-            next(new CustomError('Not authorized to access this resource.', 401))
+            next(new CustomError(`Photo with id ${id} does not exist.`, 401))
+            return
+        }
+        const photoAndUser = await prisma.photo.findFirst({
+            where: { id: id, authorId: user_id}
+        })
+        if(!photoAndUser){
+            next(new CustomError(`You are not the owner of this photo.`, 401))
             return
         }
     }
