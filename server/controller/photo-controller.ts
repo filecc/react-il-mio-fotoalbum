@@ -35,7 +35,12 @@ export async function index(req: Request, res: Response, next: NextFunction) {
       author: photo.author,
     };
   });
-  res.json(mappedPhotos);
+  res.json({
+    message: "Photos found successfully.",
+    status: 200,
+    error: false,
+    photos: mappedPhotos,
+  });
 }
 
 export async function store(req: Request, res: Response, next: NextFunction) {
@@ -108,8 +113,12 @@ export async function store(req: Request, res: Response, next: NextFunction) {
         message: "Photo created successfully.",
         status: 200,
         error: false,
-        ...photo,
-        categories: photo.categories.map((category) => category.name),
+        data: {
+            ...photo,
+            categories: photo.categories.map((category) => category.name)
+        }
+       
+        
       });
     })
     .catch((err) => {
@@ -154,7 +163,12 @@ export async function show(req: Request, res: Response, next: NextFunction) {
         photo.link,
         photo.author)
     
-      res.json(photoToSend)
+      res.json({
+        message: "Photo found successfully.",
+        status: 200,
+        error: false,
+        data: photoToSend,
+      })
   }
   
 }
@@ -254,8 +268,10 @@ export async function edit(req: Request, res: Response, next: NextFunction){
               }
        }
     })
-    
 
-
-    res.json({message: 'Photo edited successfully.', status: 200, error: false, photo: {...newPhoto, categories: newPhoto.categories.map((category) => category.name)}})
+    res.json({
+        message: 'Photo edited successfully.', 
+        status: 200, 
+        error: false, 
+        data: {...newPhoto, categories: newPhoto.categories.map((category) => category.name)}})
 }
