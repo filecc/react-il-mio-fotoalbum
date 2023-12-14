@@ -192,8 +192,9 @@ export async function deletePhoto(
   }
 
   const photo_id = req.params.id;
+  const user_id = req.cookies["user-id"];
   const photo = await prisma.photo.findUniqueOrThrow({
-    where: { id: photo_id },
+    where: { id: photo_id, authorId: user_id },
     select: { link: true }
   }).catch((err) => {
     next(new CustomError(err.message, 501));
@@ -231,8 +232,10 @@ export async function edit(req: Request, res: Response, next: NextFunction){
         return
     }
     const { id } = req.params
+    const user_id = req.cookies['user-id']
     const oldPhoto = await prisma.photo.findUniqueOrThrow({ where: { id }, include: { categories: true}})
     const photo = new PhotoClass(title, description, visible, categories ?? ["general"], oldPhoto.link)
+
     if(req.file){
         fs.unlinkSync(path.resolve(`./public/images/${oldPhoto.link}`))
         const imageSlug = req.file.filename + '.jpg'
@@ -240,7 +243,7 @@ export async function edit(req: Request, res: Response, next: NextFunction){
         photo.link = imageSlug
     }
     const newPhoto = await prisma.photo.update({
-        where: { id},
+        where: { id , authorId: user_id},
         data: {
             title: photo.title ?? oldPhoto.title,
             description: photo.description ?? oldPhoto.description,
