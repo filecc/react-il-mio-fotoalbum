@@ -1,5 +1,6 @@
 # Logs
 server/*.env
+/server/public/images/*
 foto-album-client/*.env
 .env
 logs
@@ -9,6 +10,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+
+
 
 node_modules
 dist

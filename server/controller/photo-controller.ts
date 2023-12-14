@@ -201,3 +201,10 @@ export async function deletePhoto(
     error: false,
   });
 }
+
+export function edit(req: Request, res: Response, next: NextFunction){
+    
+
+
+    res.json('Edit photo')
+}
