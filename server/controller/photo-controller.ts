@@ -105,6 +105,9 @@ export async function store(req: Request, res: Response, next: NextFunction) {
     })
     .then((photo) => {
       return res.json({
+        message: "Photo created successfully.",
+        status: 200,
+        error: false,
         ...photo,
         categories: photo.categories.map((category) => category.name),
       });
@@ -202,9 +205,57 @@ export async function deletePhoto(
   });
 }
 
-export function edit(req: Request, res: Response, next: NextFunction){
+export async function edit(req: Request, res: Response, next: NextFunction){
+    const result : Result = validationResult(req)
+    if(!result.isEmpty()){
+        next(new CustomError('There are some errors. Check out them.', 500, result.array()))
+        return
+    }
+    const { title, description, visible, categories } = req.body
+    if(Object.keys(req.body).length === 0 && !req.file){
+        next(new CustomError('You must provide at least one field to edit.', 500))
+        return
+    }
+    const { id } = req.params
+    const oldPhoto = await prisma.photo.findUniqueOrThrow({ where: { id }, include: { categories: true}})
+    const photo = new PhotoClass(title, description, visible, categories ?? ["general"], oldPhoto.link)
+    if(req.file){
+        fs.unlinkSync(path.resolve(`./public/images/${oldPhoto.link}`))
+        const imageSlug = req.file.filename + '.jpg'
+        fs.renameSync(req.file.path, path.resolve(`./public/images/${imageSlug}`))
+        photo.link = imageSlug
+    }
+    const newPhoto = await prisma.photo.update({
+        where: { id},
+        data: {
+            title: photo.title ?? oldPhoto.title,
+            description: photo.description ?? oldPhoto.description,
+            visible: photo.visible ?? oldPhoto.visible,
+            link: photo.link,
+            categories: {
+                disconnect: oldPhoto.categories.map((category) => {
+                    return { name: category.name }
+                }),
+                connectOrCreate: photo.categories.map((category: string) => {
+                    return {
+                        where: { name: category },
+                        create: { name: category }
+                    }
+                })
+            }
+
+        },
+       include: { 
+              categories: {
+                select: { name: true }
+              },
+              author: {
+                select: { name: true, email: true, id: true }
+              }
+       }
+    })
     
 
 
-    res.json('Edit photo')
+    res.json({message: 'Photo edited successfully.', status: 200, error: false, photo: {...newPhoto, categories: newPhoto.categories.map((category) => category.name)}})
 }

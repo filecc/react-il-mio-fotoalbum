@@ -12,5 +12,4 @@ export default function erroHandler (err: CustomError, req: Request, res: Respon
             }
         }) : 'No other info.'
     })
-    return
 }
