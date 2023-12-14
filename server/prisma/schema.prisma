@@ -20,6 +20,6 @@ model Photo {
 
 model Category {
   id String @id @default(uuid())
-  name String @db.VarChar(255)
+  name String @db.VarChar(255) @unique
   photos Photo[]
 }
