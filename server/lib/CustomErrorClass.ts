@@ -1,13 +1,10 @@
-interface errValidations {
-    path: string,
-    msg: string
-}
+import { FieldValidationError } from "express-validator";
 
 
-export class CustomError extends Error {
+export default class CustomError extends Error {
     statusCode: number;
-    array?: errValidations[];
-    constructor(message: string | undefined, statusCode: number, array?: errValidations[]) {
+    array?: FieldValidationError[];
+    constructor(message: string | undefined, statusCode: number, array?: FieldValidationError[]) {
         super(message);
         this.statusCode = statusCode;
         this.array = array

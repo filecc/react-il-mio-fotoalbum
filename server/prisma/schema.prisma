@@ -16,6 +16,7 @@ model Photo {
   description String @db.Text
   visible Boolean @default(true)
   categories Category[]
+  created_at DateTime @default(now())
 }
 
 model Category {

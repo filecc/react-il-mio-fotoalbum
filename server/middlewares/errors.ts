@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { CustomError } from "../lib/CustomErrorClass";
+import CustomError from "../lib/CustomErrorClass"
 
 export default function erroHandler (err: CustomError, req: Request, res: Response, next: NextFunction){
     res.json({
