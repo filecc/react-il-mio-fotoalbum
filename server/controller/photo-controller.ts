@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { PhotoClass } from "../lib/PhotoClass";
+import { CustomError } from "../lib/CustomErrorClass";
 
 const express = require('express');
 const prisma = new PrismaClient()
