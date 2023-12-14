@@ -3,6 +3,9 @@ import { PrismaClient } from "@prisma/client";
 import { PhotoClass } from "../lib/PhotoClass";
 import CustomError from "../lib/CustomErrorClass";
 import { Result, validationResult } from "express-validator";
+import * as fs from 'fs'
+import * as path from 'path'
+
 const prisma = new PrismaClient();
 
 export async function index(req: Request, res: Response, next: NextFunction) {
@@ -47,12 +50,23 @@ export async function store(req: Request, res: Response, next: NextFunction) {
     );
     return;
   }
+  if(!req.file){
+    next(new CustomError('You must provide a file.', 500))
+    return
+  }
+  
+  const imageSlug = req.file.filename + '.jpg'
+    fs.renameSync(req.file.path, path.resolve(`./public/images/${imageSlug}`))
+
+
+
   const user_id = req.cookies["user-id"];
   const photo = new PhotoClass(
     req.body.title,
     req.body.description,
     req.body.visible,
-    req.body.categories
+    req.body.categories,
+    imageSlug
   );
   await prisma.photo
     .create({
@@ -65,6 +79,7 @@ export async function store(req: Request, res: Response, next: NextFunction) {
         title: photo.title,
         description: photo.description,
         visible: photo.visible,
+        link: photo.link,
         categories: {
           connectOrCreate: photo.categories.map((category: string) => {
             return {
@@ -79,6 +94,7 @@ export async function store(req: Request, res: Response, next: NextFunction) {
         title: true,
         description: true,
         visible: true,
+        link: true,
         categories: {
           select: { name: true },
         },
@@ -132,6 +148,7 @@ export async function show(req: Request, res: Response, next: NextFunction) {
         photo.description, 
         photo.visible, 
         photo.categories.map((category) => category.name), 
+        photo.link,
         photo.author)
     
       res.json(photoToSend)
@@ -158,6 +175,17 @@ export async function deletePhoto(
   }
 
   const photo_id = req.params.id;
+  const photo = await prisma.photo.findUniqueOrThrow({
+    where: { id: photo_id },
+    select: { link: true }
+  }).catch((err) => {
+    next(new CustomError(err.message, 501));
+    return;
+  })
+  if(photo){
+    fs.unlinkSync(path.resolve(`./public/images/${photo.link}`))
+  }
+
   await prisma.photo
     .delete({
       where: { id: photo_id },
@@ -166,6 +194,7 @@ export async function deletePhoto(
       next(new CustomError(err.message, 501));
       return;
     });
+    
   res.json({
     message: "Photo deleted successfully.",
     status: 200,

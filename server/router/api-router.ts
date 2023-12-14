@@ -11,7 +11,7 @@ import auth from '../middlewares/auth';
 
 
 const apiRouter = express.Router();
-const createMiddleware = [multer().none(), checkSchema(createPhotoValidation)]
+const createMiddleware = [multer({dest: "public/images"}).single("image"), checkSchema(createPhotoValidation)]
 
 
 apiRouter.get('/photos', index)

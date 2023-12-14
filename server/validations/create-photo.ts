@@ -1,4 +1,5 @@
-export = {
+
+export  = {
     title: {
         in: ["body"],
         isString: {
@@ -9,6 +10,7 @@ export = {
             options: { min: 5},
             errorMessage: 'Title must be at least 5 characters long.',
         },
+        
         
     },
     description: {
