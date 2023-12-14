@@ -13,8 +13,8 @@ import checkUserID from '../middlewares/check-user-id';
 
 
 const apiRouter = express.Router();
-const createMiddleware = [checkSchema(createPhotoValidation), multer({dest: "public/images"}).single("image")]
-const editMiddleware = [checkUserID, checkSchema(editPhotoValidation), multer({dest: "public/images"}).single("image")]
+const createMiddleware = [checkUserID, multer({dest: "public/images"}).single("image"), checkSchema(createPhotoValidation)]
+const editMiddleware = [checkUserID, multer({dest: "public/images"}).single("image"), checkSchema(editPhotoValidation)]
 const deleteMiddleware = [checkUserID, checkSchema(deletePhotoValidation)]
 
 apiRouter.get('/photos', index)

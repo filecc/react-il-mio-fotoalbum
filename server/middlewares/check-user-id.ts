@@ -10,18 +10,23 @@ export default async function checkUserID(req: Request, res: Response, next: Nex
     const prisma = new PrismaClient()
     const id = req.params.id
     const user_id = req.cookies['user-id']
-
-    if(!user_id){
-        next(new CustomError('You are not authorized. Login first.', 401))
-        return
-    }
-    const photo = await prisma.photo.findFirst({
-        where: { id: id, authorId: user_id }
+    const user = await prisma.user.findUnique({
+        where: { id: user_id }
     })
-    if(!photo){
-        next(new CustomError('Not authorized to access this resource.', 401))
+    if(!user){
+        next(new CustomError('Your credentials are malformed.', 401))
         return
     }
+    if(id){
+        const photo = await prisma.photo.findFirst({
+            where: { id: id, authorId: user_id }
+        })
+        if(!photo){
+            next(new CustomError('Not authorized to access this resource.', 401))
+            return
+        }
+    }
+    
    
     next()
     return 

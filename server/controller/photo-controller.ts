@@ -55,6 +55,15 @@ export async function store(req: Request, res: Response, next: NextFunction) {
     );
     return;
   }
+  const user_id = req.cookies["user-id"];
+  const user = await prisma.user.findUnique({
+    where: { id: user_id }
+  })
+  if(!user){
+    next(new CustomError('User not found.', 501))
+    return
+  }
+
   if(!req.file){
     next(new CustomError('You must provide a file.', 500))
     return
@@ -63,9 +72,7 @@ export async function store(req: Request, res: Response, next: NextFunction) {
   const imageSlug = req.file.filename + '.jpg'
     fs.renameSync(req.file.path, path.resolve(`./public/images/${imageSlug}`))
 
-
-
-  const user_id = req.cookies["user-id"];
+  
   const photo = new PhotoClass(
     req.body.title,
     req.body.description,
@@ -222,7 +229,7 @@ export async function deletePhoto(
 
 export async function edit(req: Request, res: Response, next: NextFunction){
     const result : Result = validationResult(req)
-    
+
     if(!result.isEmpty()){
         next(new CustomError('There are some errors. Check out them.', 500, result.array()))
         return
