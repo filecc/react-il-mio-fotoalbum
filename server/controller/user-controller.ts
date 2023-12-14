@@ -30,8 +30,9 @@ export async function login(req: Request, res: Response, next: NextFunction){
             id: user.id,
             email: user.email
         })
-        res.cookie('fa-token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 }).json({ message: 'Logged in successfully.' })
-    
- 
-    
+        res.cookie('fa-token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 }).json({ message: 'Logged in successfully.' })    
+}
+
+export async function logout(req: Request, res: Response, next: NextFunction){
+    res.clearCookie('fa-token').json({ message: 'Logged out successfully.' })
 }
