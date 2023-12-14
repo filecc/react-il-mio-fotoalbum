@@ -42,15 +42,14 @@ export async function store(req: Request, res: Response, next: NextFunction){
     if (!validations.isEmpty()) {
         next(new CustomError('There are some errors. Check out them.', 500, validations.array()))
         return
-      }
-
+    }
+    const user_id = req.cookies['user-id']
     const photo = new PhotoClass(req.body.title, req.body.description, req.body.visible, req.body.categories)
-
     await prisma.photo.create({
         data: {
             author: {
                 connect: {
-                    id: '162d20b6-9a7e-11ee-8050-30d28b42ab91'
+                    id: user_id
                 }
             },
             title: photo.title,

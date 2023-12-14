@@ -28,9 +28,11 @@ export async function login(req: Request, res: Response, next: NextFunction){
 
         const token = await generateJwtToken({
             id: user.id,
-            email: user.email
+            email: user.email,
         })
-        res.cookie('fa-token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 }).json({ message: 'Logged in successfully.' })    
+        res.cookie('fa-token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 })
+        res.cookie('user-id', user.id, { maxAge: 1000 * 60 * 60 * 24 })
+        res.json({ message: 'Logged in successfully.' })    
 }
 
 export async function logout(req: Request, res: Response, next: NextFunction){
