@@ -1,11 +1,9 @@
 import { Request, Response } from 'express';
+import { index } from '../controller/photo-controller';
 const express = require('express')
 
 const apiRouter = express.Router();
 
-apiRouter.get('/', (req: Request, res: Response) => {
-    res.json('Hello World!')
-    }
-)
+apiRouter.get('/photos', index)
 
 export { apiRouter };
