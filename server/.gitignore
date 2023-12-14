@@ -1,6 +1,6 @@
 # Logs
-server/.env
-foto-album-client/.env
+server/*.env
+foto-album-client/*.env
 .env
 logs
 *.log
