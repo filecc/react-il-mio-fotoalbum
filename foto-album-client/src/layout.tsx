@@ -24,14 +24,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <UserContext.Provider value={isLogged}>
+       <Navbar />
       <main
-        className="min-h-[100dvh]"
+        className="min-h-[calc(100dvh-64px)] w-full flex flex-col items-center bg-white dark:bg-gray-900"
       >
-        <Navbar />
-        <div className="w-full min-h-full flex flex-col items-center">
         {children}
-        </div>
-        
       </main>
     </UserContext.Provider>
   );
