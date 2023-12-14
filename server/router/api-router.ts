@@ -1,17 +1,24 @@
-import { index, store } from '../controller/photo-controller';
+import { deletePhoto, index, show, store } from '../controller/photo-controller';
+const express = require('express')
 import notFound from '../middlewares/not-found';
 import { checkSchema } from 'express-validator';
-const createPhoto = require('../validations/create-photo');
+const createPhotoValidation = require('../validations/create-photo');
+const deletePhotoValidation = require('../validations/delete-photo');
+const showPhotoValidation = require('../validations/show-photo');
 import multer from 'multer';
 import erroHandler from '../middlewares/errors';
 import auth from '../middlewares/auth';
-const express = require('express')
+
 
 const apiRouter = express.Router();
-const createMiddleware = [multer().none(), auth, checkSchema(createPhoto)]
+const createMiddleware = [multer().none(), checkSchema(createPhotoValidation)]
+
 
 apiRouter.get('/photos', index)
+apiRouter.use('/photos/', auth)
 apiRouter.post('/photos/add', createMiddleware, store)
+apiRouter.delete('/photos/delete/:id', checkSchema(deletePhotoValidation), deletePhoto)
+apiRouter.get('/photo/:id', checkSchema(showPhotoValidation), show)
 
 apiRouter.use(notFound)
 apiRouter.use(erroHandler)
