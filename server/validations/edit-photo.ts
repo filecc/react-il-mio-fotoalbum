@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
+const cookieParser = require('cookie-parser')
+const user_id = cookieParser.JSONCookies['user-id']
 
 export  = {
     id: {
@@ -11,7 +13,7 @@ export  = {
         custom: {
             options: async (value: string) => {
                 const photo = await prisma.photo.findUniqueOrThrow({
-                    where: { id: value },
+                    where: { id: value, authorId: user_id},
                 })
             },
             errorMessage: `Photo doesn't exist.`

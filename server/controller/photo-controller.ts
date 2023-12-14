@@ -222,6 +222,7 @@ export async function deletePhoto(
 
 export async function edit(req: Request, res: Response, next: NextFunction){
     const result : Result = validationResult(req)
+    
     if(!result.isEmpty()){
         next(new CustomError('There are some errors. Check out them.', 500, result.array()))
         return
@@ -235,14 +236,9 @@ export async function edit(req: Request, res: Response, next: NextFunction){
     const user_id = req.cookies['user-id']
     const oldPhoto = await prisma.photo.findUniqueOrThrow({ where: { id }, include: { categories: true}})
     const photo = new PhotoClass(title, description, visible, categories ?? ["general"], oldPhoto.link)
-
-    if(req.file){
-        fs.unlinkSync(path.resolve(`./public/images/${oldPhoto.link}`))
-        const imageSlug = req.file.filename + '.jpg'
-        fs.renameSync(req.file.path, path.resolve(`./public/images/${imageSlug}`))
-        photo.link = imageSlug
-    }
-    const newPhoto = await prisma.photo.update({
+    let isEditable = true
+    
+   const newPhoto = await prisma.photo.update({
         where: { id , authorId: user_id},
         data: {
             title: photo.title ?? oldPhoto.title,
@@ -270,11 +266,27 @@ export async function edit(req: Request, res: Response, next: NextFunction){
                 select: { name: true, email: true, id: true }
               }
        }
+    }).catch((err) => {
+        isEditable = false
+        next(new CustomError(err.message, 501))
+        return
     })
+    
+    
+    if(newPhoto && isEditable){
+        if(req.file){
+            console.log('diocane')
+            fs.unlinkSync(path.resolve(`./public/images/${oldPhoto.link}`))
+            const imageSlug = req.file.filename + '.jpg'
+            fs.renameSync(req.file.path, path.resolve(`./public/images/${imageSlug}`))
+            photo.link = imageSlug
+        }  
 
-    res.json({
-        message: 'Photo edited successfully.', 
-        status: 200, 
-        error: false, 
-        data: {...newPhoto, categories: newPhoto.categories.map((category) => category.name)}})
+        res.json({
+            message: 'Photo edited successfully.', 
+            status: 200, 
+            error: false, 
+            data: {...newPhoto, categories: newPhoto.categories.map((category) => category.name)}}) 
+    }
+    
 }
