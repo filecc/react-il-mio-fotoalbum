@@ -1,10 +1,12 @@
-const express = require('express');
+import { apiRouter } from './router/api-router';
+import { Request, Response } from 'express';
+const express = require('express')
+
 const app = express();
 const port = 4000
-const apiRouter = require('./router/api-router.js');
 
 
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
     res.json('Api available at /api!')
     }
 )
