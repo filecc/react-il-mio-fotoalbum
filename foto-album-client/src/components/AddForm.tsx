@@ -12,10 +12,7 @@ import { UpdateContext } from "../lib/context/UpdateContext";
 
 export default function AddForm() {
   const [open, setIsOpen] = useState<boolean>(false);
-  const [[error, errorMessage], setError] = useState<[boolean, string]>([
-    false,
-    "",
-  ]);
+  const [[error, errorMessage], setError] = useState<[boolean, string]>([false,"",]);
   const [fields, setFields] = useState<FieldError[]>();
   const [visibility, setVisibility] = useState(false);
   const url = useContext(UrlContext);
