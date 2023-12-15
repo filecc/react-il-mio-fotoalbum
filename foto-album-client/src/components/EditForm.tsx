@@ -115,7 +115,7 @@ export default function EditForm({
                   >
                     Image
                   </label>
-                  <input className="text-sm file:mr-5 file:py-2.5 file:rounded-l-md file:px-3 file:text-sm file:bg-gray-50 dark:file:bg-gray-600 dark:file:text-gray-100 file:text-gray-700 hover:file:cursor-pointer file:border-none ring-2 rounded-md dark:ring-gray-500 ring-gray-200 mt-2 text-gray-800 dark:text-gray-200" name="file" type="file" />
+                  <input className="text-sm file:mr-5 file:py-2.5 file:rounded-l-md file:px-3 file:text-sm file:bg-gray-50 dark:file:bg-gray-600 dark:file:text-gray-100 file:text-gray-700 hover:file:cursor-pointer file:border-none ring-2 rounded-md dark:ring-gray-500 ring-gray-200 mt-2 text-gray-800 dark:text-gray-200 w-full" name="file" type="file" />
                 </div>
                 <div className="pt-3">
                   <label

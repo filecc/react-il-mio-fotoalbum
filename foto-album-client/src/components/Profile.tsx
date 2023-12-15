@@ -129,7 +129,7 @@ export default function Profile() {
                   classes="w-32 h-32 sm:w-52 sm:h-52 p-2 relative overflow-hidden"
                 />
                 {enabled && (
-                  <div className="absolute top-0 bottom-0 left-0 right-0 grid place-items-center bg-black/60 m-2">
+                  <div className="absolute top-0 bottom-0 left-0 right-0 grid place-items-center bg-black/60 dark:bg-black/40 m-2">
                     {!loadingDelete ? <span onClick={() => setTarget(photo.id)}>
                       {target != "" && target === photo.id ? 
                         <button
