@@ -27,9 +27,9 @@ export default function Feed(){
     return (<>
     {photos.length === 0 
     ? <p>No photos</p> 
-    : <>
+    : <section className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6 h-full p-2 place-items-start">
         {photos.map((photo) => <Photo key={photo.id} photo={photo} />)}
-    </>  
+    </section>  
     }
        
     </>)

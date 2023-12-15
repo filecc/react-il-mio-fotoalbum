@@ -13,4 +13,5 @@ interface Photo {
     link: string;
     categories: string[];
     author: User;
+    created_at: string
 }
