@@ -49,7 +49,7 @@ export async function login(req: Request, res: Response, next: NextFunction){
 }
 
 export async function logout(req: Request, res: Response, next: NextFunction){
-    res.clearCookie('fa-token').json({ code: 200,
+    res.clearCookie('fa-token').clearCookie("user-id").json({ code: 200,
         error: false,  message: 'Logged out successfully.', })
 }
 
