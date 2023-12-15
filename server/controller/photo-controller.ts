@@ -261,7 +261,6 @@ export async function deletePhoto(
 }
 
 export async function edit(req: Request, res: Response, next: NextFunction){
-    console.log(req.body)
     const result : Result = validationResult(req)
 
     if(!result.isEmpty()){

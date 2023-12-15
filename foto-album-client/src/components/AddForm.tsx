@@ -32,14 +32,12 @@ export default function AddForm() {
       formData.delete("categories");
     }
     formData.append("visible", visibility.toString());
-    console.log(formData.get('file'))
     const res = await fetch(url + urlToFetch, {
       credentials: "include",
       method: "POST",
       body: formData,
     });
     const result = await res.json();
-    console.log(result)
     if(result.status == 200){
         setCategories(result.data.categories);
         setIsOpen(false);
