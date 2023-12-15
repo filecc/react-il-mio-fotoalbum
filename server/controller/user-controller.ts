@@ -79,3 +79,16 @@ export async function getUserData(req: Request, res: Response, next: NextFunctio
     res.json({ code: 200, error: false, data: user })
 
 }
+export async function getUserPublic(req: Request, res: Response, next: NextFunction){
+    const user_id = req.params.id
+    const user = await prisma.user.findFirst({
+        where: { id: user_id },
+        select: { name: true }
+    }) 
+    if(!user){
+        next(new CustomError('User not found.', 500))
+        return
+    }
+    res.json({ code: 200, error: false, data: user })
+
+}

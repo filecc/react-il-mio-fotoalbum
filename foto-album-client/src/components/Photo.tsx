@@ -29,9 +29,9 @@ export default function Photo({ photo }: { photo: Photo }) {
       <div className="flex items-center justify-between pb-2">
         <div className="flex items-center gap-2">
           <span className="w-10 h-10 bg-gray-400 rounded-full grid place-items-center font-bold">{photo.author.name.charAt(0).toUpperCase()}</span>
-          <small className="font-base font-bold">
+          <a href={'/photos/'+photo.author.id} className="font-base font-bold">
             {photo.author.name}
-          </small>
+          </a>
         </div>
 
         <small>posted {posted}</small>

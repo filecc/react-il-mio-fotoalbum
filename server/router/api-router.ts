@@ -1,4 +1,4 @@
-import { deletePhoto, edit, index, indexPerAuthor, show, store } from '../controller/photo-controller';
+import { deletePhoto, edit, index, indexPerAuthor, indexPerAuthorPublic, show, store } from '../controller/photo-controller';
 const express = require('express')
 import notFound from '../middlewares/not-found';
 import { checkSchema } from 'express-validator';
@@ -13,18 +13,19 @@ import checkUserID from '../middlewares/check-user-id';
 
 
 const apiRouter = express.Router(); 
-const createMiddleware = [checkUserID, multer({dest: "public/images"}).single("file"), checkSchema(createPhotoValidation)]
-const editMiddleware = [checkUserID, multer({dest: "public/images"}).single('file'), checkSchema(editPhotoValidation)]
-const deleteMiddleware = [checkUserID, checkSchema(deletePhotoValidation)]
+const createMiddleware = [auth, checkUserID, multer({dest: "public/images"}).single("file"), checkSchema(createPhotoValidation)]
+const editMiddleware = [auth, checkUserID, multer({dest: "public/images"}).single('file'), checkSchema(editPhotoValidation)]
+const deleteMiddleware = [auth, checkUserID, checkSchema(deletePhotoValidation)]
+const userMiddleware = [auth, checkUserID]
 
 apiRouter.get('/photos', index)
-apiRouter.use('/photos/', auth)
 
 apiRouter.post('/photos/add', createMiddleware, store)
 apiRouter.delete('/photos/delete/:id', deleteMiddleware, deletePhoto)
 apiRouter.get('/photo/:id', checkSchema(showPhotoValidation), show)
 apiRouter.put('/photos/edit/:id', editMiddleware, edit)
-apiRouter.get('/photos/user', checkUserID, indexPerAuthor)
+apiRouter.get('/photos/user', userMiddleware, indexPerAuthor)
+apiRouter.get('/photos/user-public/:id', indexPerAuthorPublic)
 
 apiRouter.use(notFound)
 apiRouter.use(erroHandler)

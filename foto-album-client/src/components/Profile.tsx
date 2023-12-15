@@ -39,6 +39,7 @@ export default function Profile() {
     getUser();
   }, [update, url]);
   useEffect(() => {
+    
     async function getUserPhoto() {
       const res = await fetch(url + "api/photos/user", {
         credentials: "include",

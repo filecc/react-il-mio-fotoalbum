@@ -76,6 +76,38 @@ export async function indexPerAuthor(req: Request, res: Response, next: NextFunc
     
     
 }
+export async function indexPerAuthorPublic(req: Request, res: Response, next: NextFunction){
+    const user_id = req.params.id
+    const photos = await prisma.photo.findMany({
+        where: { authorId: user_id, visible: true },
+        include: {
+            categories: {
+                select: { name: true }
+            },
+            author: {
+              select: { name: true, email: true}
+            }
+        }
+    })
+    if(photos.length > 0){
+      res.json({
+        message: 'Photos found successfully.',
+        status: 200,
+        error: false,
+        data: photos.map((photo) => {
+            return {
+                ...photo,
+                categories: photo.categories.map((category) => category.name.toLowerCase().trim())
+            }
+        })
+    })
+    } else {
+        next(new CustomError('No photos found.', 501))
+        return
+    }
+    
+    
+}
 export async function store(req: Request, res: Response, next: NextFunction) {
   const validations: Result = validationResult(req);
   if (!validations.isEmpty()) {

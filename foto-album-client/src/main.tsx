@@ -13,6 +13,7 @@ import Profile from "./components/Profile.tsx";
 import Feed from "./components/Feed.tsx";
 import Loader from "./components/Loader.tsx";
 import ErrorPage from "./error-page.tsx";
+import UserPublic from "./components/UserPublic.tsx";
 
 const checkUserLogged = async () => {
   const res = await fetch("http://localhost:4000/user/isLogged", {
@@ -43,10 +44,10 @@ const router = createBrowserRouter([
   {
     path: "/photos",
     element: <Feed />,
-    children: [
-      // this is a nested route, it will be rendered when the url is /photos/user
-      // with public photos of the user
-    ]
+  },
+  {
+    path: "/photos/:id",
+    element: <UserPublic />
   },
   {
     path: "/logout",
