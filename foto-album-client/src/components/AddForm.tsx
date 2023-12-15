@@ -26,7 +26,7 @@ export default function AddForm() {
     
     const urlToFetch =`api/photos/add/`
     const formData = new FormData(event.currentTarget);
-   
+    
     formData.append("categories", categories.join(","));
     if (categories[0] == "" && categories.length == 1) {
       formData.delete("categories");
