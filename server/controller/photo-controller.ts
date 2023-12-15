@@ -10,6 +10,7 @@ const prisma = new PrismaClient();
 
 export async function index(req: Request, res: Response, next: NextFunction) {
   const photos = await prisma.photo.findMany({
+    where: { visible: true },
     include: {
       categories: {
         select: { name: true },
@@ -33,6 +34,7 @@ export async function index(req: Request, res: Response, next: NextFunction) {
       created_at: photo.created_at,
       categories: photo.categories.map((category) => category.name),
       author: photo.author,
+      link: photo.link
     };
   });
   res.json({

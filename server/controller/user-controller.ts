@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { Result, validationResult } from "express-validator";
 import CustomError from "../lib/CustomErrorClass";
-import { comparePassword, generateJwtToken, hashPassword } from "../lib/utils/functions";
+import { comparePassword } from "../lib/utils/functions";
 import { PrismaClient } from "@prisma/client";
 import jwt from 'jsonwebtoken'
 

@@ -10,7 +10,7 @@ import "./index.css";
 import Layout from "./layout.tsx";
 import Login from "./components/Login.tsx";
 import Profile from "./components/Profile.tsx";
-import Photos from "./components/Photos.tsx";
+import Feed from "./components/Feed.tsx";
 import Loader from "./components/Loader.tsx";
 
 const checkUserLogged = async () => {
@@ -40,7 +40,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/photos",
-    element: <Photos />
+    element: <Feed />
   },
   {
     path: "/logout",
