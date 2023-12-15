@@ -3,7 +3,6 @@ import { UrlContext } from "../lib/context/UrlContext";
 import { HeartIcon } from "@heroicons/react/24/outline";
 
 export default function Photo({ photo }: { photo: Photo }) {
-  console.log(photo);
   const url = useContext(UrlContext);
   const posted =
     Math.round(

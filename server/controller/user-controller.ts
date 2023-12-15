@@ -69,3 +69,13 @@ export async function isLogged(req: Request, res: Response, next: NextFunction){
    
     
 }
+
+export async function getUserData(req: Request, res: Response, next: NextFunction){
+    const user_id = req.cookies['user-id']
+    const user = await prisma.user.findFirst({
+        where: { id: user_id },
+        select: { name: true, email: true, id: true }
+    })
+    res.json({ code: 200, error: false, data: user })
+
+}

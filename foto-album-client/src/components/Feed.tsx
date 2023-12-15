@@ -9,7 +9,6 @@ export default function Feed(){
     const [ loading, setLoading ] = useState<boolean>(true)
     const url = useContext(UrlContext)
     const { update } = useContext(UpdateContext)
-    console.log(url)
     
     useEffect(() => {
         const getPhotos = async () => {
