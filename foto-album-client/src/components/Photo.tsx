@@ -25,7 +25,7 @@ export default function Photo({ photo }: { photo: Photo }) {
             24
         ) + " days ago";
   return (
-    <article className="w-[400px] h-[400px] flex flex-col justify-between rounded-b-md p-2">
+    <article className="w-[400px] h-[400px] flex flex-col justify-between rounded-b-md p-2 text-gray-900 dark:text-white/80">
       <div className="flex items-center justify-between pb-2">
         <div className="flex items-center gap-2">
           <span className="w-10 h-10 bg-gray-400 rounded-full grid place-items-center font-bold">{photo.author.name.charAt(0).toUpperCase()}</span>
