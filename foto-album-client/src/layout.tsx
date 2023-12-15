@@ -10,9 +10,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     async function isUserLoggedIn() {
-      const res = await fetch("http://localhost:4000/user/isLogged");
+      const res = await fetch("http://localhost:4000/user/isLogged", {
+        credentials: "include"
+      });
       const data = await res.json();
-     
+    
       if (data.result) {
         setIsLogged(true);
       } else {

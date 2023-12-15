@@ -7,7 +7,7 @@ import { UserContext } from "../lib/context/UserContext";
 export default function Example() {
   const { isLogged } = useContext(UserContext);
   
-
+  
   const path = window.location.pathname;
 
   const menuItems = [

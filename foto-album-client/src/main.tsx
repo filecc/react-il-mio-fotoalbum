@@ -10,6 +10,7 @@ import "./index.css";
 import Layout from "./layout.tsx";
 import Login from "./components/Login.tsx";
 import Profile from "./components/Profile.tsx";
+import Photos from "./components/Photos.tsx";
 
 const checkUserLogged = async () => {
   const res = await fetch("http://localhost:4000/user/isLogged", {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
     element: <Profile />,
     loader: checkUserLogged
   },
+  {
+    path: "/photos",
+    element: <Photos />
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
