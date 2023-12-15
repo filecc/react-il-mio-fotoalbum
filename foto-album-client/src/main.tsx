@@ -14,6 +14,7 @@ import Feed from "./components/Feed.tsx";
 import Loader from "./components/Loader.tsx";
 import ErrorPage from "./error-page.tsx";
 import UserPublic from "./components/UserPublic.tsx";
+import Register from "./components/Register.tsx";
 
 const checkUserLogged = async () => {
   const res = await fetch("http://localhost:4000/user/isLogged", {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />
+  },
+  {
+    path: "/register",
+    element: <Register />,
   },
   {
     path: "/profile",

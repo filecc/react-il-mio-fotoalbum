@@ -17,8 +17,8 @@ export = {
           const user = await prisma.user.findUniqueOrThrow({
             where: { email: value },
           })
-        }, 
-        errorMessage: `User doesn't exist.`
+          if(!user) throw new Error('User doesn\'t exist.');
+        }
       }
     },
     password: {

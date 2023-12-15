@@ -15,8 +15,8 @@ export  = {
                 const photo = await prisma.photo.findUniqueOrThrow({
                     where: { id: value, authorId: user_id},
                 })
-            },
-            errorMessage: `Photo doesn't exist.`
+                if(!photo) throw new Error('Photo doesn\'t exist.');
+            }
         }
     },
     title: {

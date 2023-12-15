@@ -7,6 +7,7 @@ import erroHandler from './middlewares/errors';
 import { userRouter } from './router/user-router';
 const express = require('express')
 import { PrismaClient } from '@prisma/client';
+import multer from 'multer';
 export const prisma = new PrismaClient();
 
 const app = express();
@@ -24,6 +25,7 @@ app.use(express.json())
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
+
 
 app.get('/', (req: Request, res: Response) => {
     res.json('Api available at /api!')

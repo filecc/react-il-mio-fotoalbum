@@ -110,7 +110,7 @@ export default function Profile() {
         </div>
       )}
       {photos.length === 0 ? (
-        <p>No photos</p>
+        <p className="text-gray-900 dark:text-white">No photos</p>
       ) : (
         <>
           <p className="font-bold text-gray-800 dark:text-white">Your Feed</p>

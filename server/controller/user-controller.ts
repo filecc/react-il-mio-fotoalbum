@@ -1,12 +1,54 @@
 import { NextFunction, Request, Response } from "express";
 import { Result, validationResult } from "express-validator";
 import CustomError from "../lib/CustomErrorClass";
-import { comparePassword } from "../lib/utils/functions";
-import { PrismaClient } from "@prisma/client";
+import { comparePassword, hashPassword } from "../lib/utils/functions";
 import jwt from 'jsonwebtoken'
 
 import { prisma } from "../server"
 
+export async function register(req: Request, res: Response, next: NextFunction){
+    console.log(req.body)
+
+    const validations : Result = validationResult(req);
+    if(!validations.isEmpty()){
+        next(new CustomError('There are some errors. Check out them.', 500, validations.array()))
+        return
+    }
+
+    const { email, name, password } = req.body
+    const hashedPassword = await hashPassword(password)
+    const user = await prisma.user.create({
+        data: {
+            email: email,
+            name: name,
+            password: hashedPassword
+        }
+    })
+    if(!user){
+        next(new CustomError('Something went wrong.', 500))
+        return
+    }
+
+    const payload = {
+        id: user.id,
+        email: user.email
+    }
+    const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
+        expiresIn: "1h"
+    })
+    res.status(200).cookie('fa-token', token, {
+        expires: new Date(Date.now() + 3600000),
+        path: '/',
+    }).cookie('user-id', user.id, {
+        expires: new Date(Date.now() + 3600000),
+        path: '/',
+    }).json({
+        message: 'Successfully signed up.',
+        code: 200,
+        error: false,
+        data: payload
+    })
+}
 export async function login(req: Request, res: Response, next: NextFunction){
     const validations : Result = validationResult(req);
     if(!validations.isEmpty()){

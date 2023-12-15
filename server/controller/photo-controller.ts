@@ -43,7 +43,6 @@ export async function index(req: Request, res: Response, next: NextFunction) {
     photos: mappedPhotos,
   });
 }
-
 export async function indexPerAuthor(req: Request, res: Response, next: NextFunction){
     const user_id = req.cookies['user-id']
     const photos = await prisma.photo.findMany({
@@ -55,7 +54,8 @@ export async function indexPerAuthor(req: Request, res: Response, next: NextFunc
             author: {
               select: { name: true, email: true, id: true}
             }
-        }
+        },
+        orderBy: { created_at: "desc" }
     })
     if(photos.length > 0){
       res.json({
@@ -87,7 +87,8 @@ export async function indexPerAuthorPublic(req: Request, res: Response, next: Ne
             author: {
               select: { name: true, email: true}
             }
-        }
+        },
+        orderBy: { created_at: "desc" }
     })
     if(photos.length > 0){
       res.json({
@@ -198,7 +199,6 @@ export async function store(req: Request, res: Response, next: NextFunction) {
       return;
     });
 }
-
 export async function show(req: Request, res: Response, next: NextFunction) {
   const result: Result = validationResult(req);
   if (!result.isEmpty()) {
@@ -244,7 +244,6 @@ export async function show(req: Request, res: Response, next: NextFunction) {
   }
   
 }
-
 export async function deletePhoto(
   req: Request,
   res: Response,
@@ -291,7 +290,6 @@ export async function deletePhoto(
     error: false,
   });
 }
-
 export async function edit(req: Request, res: Response, next: NextFunction){
     const result : Result = validationResult(req)
 
