@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { UrlContext } from "../lib/context/UrlContext";
-import { classNames } from "../lib/utils/functions";
+import { classNames, fieldError } from "../lib/utils/functions";
 import {
   EyeIcon,
   EyeSlashIcon,
@@ -12,6 +12,11 @@ import { UpdateContext } from "../lib/context/UpdateContext";
 
 export default function AddForm() {
   const [open, setIsOpen] = useState<boolean>(false);
+  const [[error, errorMessage], setError] = useState<[boolean, string]>([
+    false,
+    "",
+  ]);
+  const [fields, setFields] = useState<FieldError[]>();
   const [visibility, setVisibility] = useState(false);
   const url = useContext(UrlContext);
   const [categories, setCategories] = useState<string[]>([]);
@@ -19,6 +24,7 @@ export default function AddForm() {
   const { update, setUpdate } = useContext(UpdateContext);
 
   const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
+    setError([false, ""]);
     event.preventDefault();
     
     const urlToFetch =`api/photos/add/`
@@ -43,11 +49,21 @@ export default function AddForm() {
         setUpdate(!update);
     } else {
        // manage error
+       setError([true, result.error])
+       setFields(result.messages)
+
     }
     
-    
-    
   };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setFields([]);
+    setError([false, ""]);
+    setCategories([]);
+    setNewCategory("");
+    setVisibility(false);
+  }
 
   return (
     <>
@@ -68,7 +84,7 @@ export default function AddForm() {
             <div className="container max-w-xl mx-auto p-6 bg-white z-10 flex flex-col gap-6 rounded-lg shadow-xl max-h-[95%] overflow-y-auto">
               <button
                 className="self-end text-gray-800 dark:text-white"
-                onClick={() => setIsOpen(false)}
+                onClick={handleClose}
               >
                 <XMarkIcon className="w-8 h-8" />
               </button>
@@ -82,6 +98,7 @@ export default function AddForm() {
                   alt="photo"
                   className="w-full h-full max-w-[400px] max-h-[400px] mx-auto"
                 /> */}
+                {error && <p className="text-red-400 text-center">{errorMessage}</p>}
                 <div className="pt-3">
                   <label
                     className="block text-sm font-medium leading-6 text-gray-900"
@@ -89,7 +106,10 @@ export default function AddForm() {
                   >
                     Image
                   </label>
-                  <input className="block pt-2" name="file" type="file" />
+                  <input className={classNames(
+                    fieldError("file", fields) ? "border-red-500" : "",
+                    "block pt-2"
+                  )} name="file" type="file" />
                 </div>
                 <div className="pt-3">
                   <label
@@ -99,11 +119,15 @@ export default function AddForm() {
                     Title
                   </label>
                   <input
-                    className="block w-full rounded-md border-0 py-2.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                    className={classNames(
+                      fieldError("title", fields) ? "ring-red-500" : "ring-gray-300",
+                      "block w-full rounded-md border-0 py-2.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                    )}
                     name="title"
                     type="text"
                     placeholder="Insert a Title"
                   />
+                  {error && <p className="text-red-500 text-center">{fieldError("title", fields)}</p>}
                 </div>
                 <div className="pt-3">
                   <label
@@ -117,9 +141,13 @@ export default function AddForm() {
                       rows={4}
                       name="description"
                       id="description"
-                      className="p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className={classNames(
+                        fieldError("description", fields) ? "ring-red-500" : "",
+                        "p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      )}
                      placeholder="Insert a description"
                     />
+                    {error && <p className="text-red-500 text-center">{fieldError("description", fields)}</p>}
                   </div>
                 </div>
                 <div className="pt-3">
@@ -233,7 +261,7 @@ export default function AddForm() {
                     Save
                   </button>
                   <button
-                    onClick={() => setIsOpen(false)}
+                    onClick={handleClose}
                     className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                   >
                     Cancel

@@ -15,3 +15,8 @@ interface Photo {
     author: User;
     created_at: string
 }
+
+interface FieldError {
+    field: string;
+    message: string;
+}
