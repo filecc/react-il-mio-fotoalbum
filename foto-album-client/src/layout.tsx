@@ -1,11 +1,12 @@
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import { UserContext } from "./lib/context/UserContext";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-  const [isLogged, setIsLogged] = useState(false);
-  
 
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  
+  const [isLogged, setIsLogged] = useState(false);
 
   useEffect(() => {
     async function isUserLoggedIn() {
@@ -23,7 +24,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   });
 
   return (
-    <UserContext.Provider value={isLogged}>
+    <UserContext.Provider value={ {
+      isLogged,
+      setIsLogged
+    } }>
        <Navbar />
       <main
         className="min-h-[calc(100dvh-64px)] w-full flex flex-col items-center bg-white dark:bg-gray-900"

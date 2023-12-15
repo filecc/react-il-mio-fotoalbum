@@ -5,7 +5,9 @@ import { classNames } from "../lib/utils/functions";
 import { UserContext } from "../lib/context/UserContext";
 
 export default function Example() {
-  const isLogged = useContext(UserContext);
+  const { isLogged } = useContext(UserContext);
+  
+
   const path = window.location.pathname;
 
   const menuItems = [
@@ -15,6 +17,12 @@ export default function Example() {
       href: "/photos",
       current: path === "/photos",
       visible: true,
+    },
+    {
+      name: "Profile",
+      href: "/profile",
+      current: path === "/profile",
+      visible: isLogged,
     },
     {
       name: "Login",

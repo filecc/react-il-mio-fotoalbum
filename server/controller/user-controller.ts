@@ -26,18 +26,31 @@ export async function login(req: Request, res: Response, next: NextFunction){
         next(new CustomError('Invalid credentials.', 500))
         return
     } 
-
-        const token = await generateJwtToken({
+        const token = jwt.sign({
             id: user.id,
-            email: user.email,
+            email: user.email
+        }, process.env.JWT_SECRET as string, {
+            expiresIn: "1h"
         })
-        res.cookie('fa-token', token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 })
-        res.cookie('user-id', user.id, { maxAge: 1000 * 60 * 60 * 24 })
-        res.json({ message: 'Logged in successfully.' })    
+        res.status(200).cookie('fa-token', token, {
+            expires: new Date(Date.now() + 3600000),
+            path: '/',
+        }).cookie('user-id', user.id, {
+            expires: new Date(Date.now() + 3600000),
+            path: '/',
+        }).json({
+            message: 'Logged in successfully.',
+            code: 200,
+            error: false
+        })
+        
+        
+         
 }
 
 export async function logout(req: Request, res: Response, next: NextFunction){
-    res.clearCookie('fa-token').json({ message: 'Logged out successfully.' })
+    res.clearCookie('fa-token').json({ code: 200,
+        error: false,  message: 'Logged out successfully.', })
 }
 
 export async function isLogged(req: Request, res: Response, next: NextFunction){

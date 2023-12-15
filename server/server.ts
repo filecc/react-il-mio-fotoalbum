@@ -6,6 +6,8 @@ import cookieParser from 'cookie-parser';
 import erroHandler from './middlewares/errors';
 import { userRouter } from './router/user-router';
 const express = require('express')
+import { PrismaClient } from '@prisma/client';
+export const prisma = new PrismaClient();
 
 const app = express();
 const port = 4000
@@ -14,7 +16,7 @@ const corsOptions = {
     origin: 'http://localhost:3000',
     credentials: true,
     optionSuccessStatus: 200,
-    methods: 'GET,POST,PUT'
+    methods: 'GET,POST,PUT,DELETE'
   }
 
 app.use(cors(corsOptions))
