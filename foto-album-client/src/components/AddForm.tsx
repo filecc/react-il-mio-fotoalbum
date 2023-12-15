@@ -51,7 +51,8 @@ export default function AddForm() {
 
   return (
     <>
-      <button className="bg-blue-400 rounded px-3 py-2.5" onClick={() => setIsOpen(true)}>
+      <button className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+       onClick={() => setIsOpen(true)}>
        <span className="flex items-center gap-1"> Add a post <PlusIcon className="w-5 h-5" /> </span>
         {/* <img
           src={`${url}images/${photo.link}`}
@@ -143,7 +144,7 @@ export default function AddForm() {
                           )
                         }
                       >
-                        
+
                         <EyeSlashIcon className="w-5 h-5" />
                       </RadioGroup.Option>
                       <RadioGroup.Option

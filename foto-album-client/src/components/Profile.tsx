@@ -1,17 +1,23 @@
 import { useContext, useEffect, useState } from "react";
-import Loader from "./Loader";
+import Loader, { LoaderIMG } from "./Loader";
 import { UrlContext } from "../lib/context/UrlContext";
 import { redirect } from "react-router-dom";
 import { UpdateContext } from "../lib/context/UpdateContext";
 import EditForm from "./EditForm";
 import AddForm from "./AddForm";
+import { Switch } from "@headlessui/react";
+import { classNames } from "../lib/utils/functions";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 export default function Profile() {
   const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
-  const { update } = useContext(UpdateContext);
+  const { update, setUpdate } = useContext(UpdateContext);
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const [enabled, setEnabled] = useState(false)
   const url = useContext(UrlContext);
+  const [loadingDelete, setLoadingDelete] = useState(false)
+  const [target, setTarget] = useState<string>('')
 
   useEffect(() => {
     const getUser = async () => {
@@ -43,6 +49,21 @@ export default function Profile() {
     getUserPhoto();
   }, [update, url]);
 
+  const handleDelete = async (id: string) => {
+    setLoadingDelete(true)
+    const res = await fetch(url + "api/photos/delete/" + id, {
+      method: "DElETE",
+      credentials: "include",
+    })
+    const result = await res.json()
+    if (result.status == 200){
+      setUpdate(!update)
+    }
+    setLoadingDelete(false)
+    setTarget('')
+  }
+
+
   if (loading) return <Loader />;
 
   return (
@@ -50,14 +71,34 @@ export default function Profile() {
       {user && (
         <div className="flex items-center justify-between w-full pr-6">
           <div className="flex items-center gap-2 self-start p-6">
-          <span className="w-10 h-10 bg-gray-400 rounded-full grid place-items-center font-bold">
-            {user.name.charAt(0).toUpperCase()}
-          </span>
-          <small className="font-base font-bold">{user.name}</small>
+            <span className="w-10 h-10 bg-gray-400 rounded-full grid place-items-center font-bold">
+              {user.name.charAt(0).toUpperCase()}
+            </span>
+            <small className="font-base font-bold">{user.name}</small>
+          </div>
+          <AddForm />
+          <Switch
+            checked={enabled}
+            onChange={() => {
+              setEnabled(!enabled)
+              setTarget('')
+              setLoadingDelete(false)
+            }}
+            className={classNames(
+              enabled ? "bg-red-600" : "bg-gray-200",
+              "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"
+            )}
+          >
+            <span className="sr-only">Use setting</span>
+            <span
+              aria-hidden="true"
+              className={classNames(
+                enabled ? "translate-x-5" : "translate-x-0",
+                "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+              )}
+            />
+          </Switch>
         </div>
-        <AddForm />
-        </div>
-        
       )}
       {photos.length === 0 ? (
         <p>No photos</p>
@@ -66,12 +107,28 @@ export default function Profile() {
           <p className="font-bold">Your Feed</p>
           <section className="grid grid-cols-3 gap-x-4 gap-y-6 h-full p-2 place-items-center">
             {photos.map((photo) => (
-              <EditForm
-                photo={photo}
-                key={photo.id}
-                classes="w-32 h-32 sm:w-52 sm:h-52 p-2 relative overflow-hidden"
-              />
-              
+              <div className="relative" key={photo.id}>
+                <EditForm
+                  photo={photo}
+                  classes="w-32 h-32 sm:w-52 sm:h-52 p-2 relative overflow-hidden"
+                />
+                {enabled && (
+                  <div className="absolute top-0 bottom-0 left-0 right-0 grid place-items-center bg-black/60 m-2">
+                    {!loadingDelete ? <span onClick={() => setTarget(photo.id)}>
+                      {target != "" && target === photo.id ? 
+                        <button
+                          onClick={() => handleDelete(photo.id)}
+                          type="button"
+                          className="rounded-full bg-red-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                        >
+                          Confirm?
+                        </button>
+                        :  <TrashIcon className="w-8 h-8 text-red-400 font-bold" />
+                      }
+                    </span>  :  <LoaderIMG />}
+                  </div>
+                )}
+              </div>
             ))}
           </section>
         </>

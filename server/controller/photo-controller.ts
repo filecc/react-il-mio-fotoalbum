@@ -318,9 +318,7 @@ export async function edit(req: Request, res: Response, next: NextFunction){
     
     if(newPhoto && isEditable){
         if(req.file && req.file?.size > 0){
-            if(!oldPhoto.link.includes('placeholder')){
-              fs.unlinkSync(path.resolve(`./public/images/${oldPhoto.link}`))
-            }
+            fs.unlinkSync(path.resolve(`./public/images/${oldPhoto.link}`))
             const imageSlug = req.file.filename + '.jpg'
               fs.renameSync(req.file.path, path.resolve(`./public/images/${imageSlug}`))
               await prisma.photo.update({
@@ -329,7 +327,7 @@ export async function edit(req: Request, res: Response, next: NextFunction){
                   link: imageSlug
                 }
               })
-              newPhoto.link = imageSlug
+              photo.link = imageSlug
             
         }  
 

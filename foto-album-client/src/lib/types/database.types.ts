@@ -6,7 +6,7 @@ interface User {
 }
 
 interface Photo {
-    id: number;
+    id: string;
     title: string;
     description: string;
     visible: boolean;
