@@ -26,7 +26,7 @@ export default function Feed(){
     return (<>
     {photos.length === 0 
     ? <p>No photos</p> 
-    : <section className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6 h-full p-2 place-items-start">
+    : <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full h-full p-2 place-items-center">
         {photos.map((photo) => <Photo key={photo.id} photo={photo} />)}
     </section>  
     }

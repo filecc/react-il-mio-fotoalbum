@@ -2,12 +2,12 @@ import jwt from 'jsonwebtoken'
 import CustomError from '../lib/CustomErrorClass'
 import { Request, Response, NextFunction } from 'express'
 import { PrismaClient } from '@prisma/client'
-
+import { prisma } from '../server'
 
 
 
 export default async function checkUserID(req: Request, res: Response, next: NextFunction) {
-    const prisma = new PrismaClient()
+    
     const id = req.params.id
     const user_id = req.cookies['user-id']
     const user = await prisma.user.findUnique({

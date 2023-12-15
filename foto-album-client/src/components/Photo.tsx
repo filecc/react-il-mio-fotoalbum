@@ -25,7 +25,7 @@ export default function Photo({ photo }: { photo: Photo }) {
             24
         ) + " days ago";
   return (
-    <article className="flex flex-col justify-between h-full rounded-b-md p-2">
+    <article className="w-[400px] h-[400px] flex flex-col justify-between rounded-b-md p-2">
       <div className="flex items-center justify-between pb-2">
         <div className="flex items-center gap-2">
           <span className="w-10 h-10 bg-gray-400 rounded-full grid place-items-center font-bold">{photo.author.name.charAt(0).toUpperCase()}</span>
@@ -38,7 +38,7 @@ export default function Photo({ photo }: { photo: Photo }) {
       </div>
 
       <img
-        className="w-full h-full max-h-[200px] object-cover"
+        className="w-full h-full max-h-[250px] object-cover"
         src={`${url}images/${photo.link}`}
         alt={photo.title + " image"}
       />

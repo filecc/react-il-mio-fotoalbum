@@ -5,8 +5,7 @@ import CustomError from "../lib/CustomErrorClass";
 import { Result, validationResult } from "express-validator";
 import * as fs from 'fs'
 import * as path from 'path'
-
-const prisma = new PrismaClient();
+import { prisma } from "../server";
 
 export async function index(req: Request, res: Response, next: NextFunction) {
   const photos = await prisma.photo.findMany({
@@ -32,7 +31,7 @@ export async function index(req: Request, res: Response, next: NextFunction) {
       description: photo.description,
       visible: photo.visible,
       created_at: photo.created_at,
-      categories: photo.categories.map((category) => category.name),
+      categories: photo.categories.map((category) => category.name.toLowerCase().trim()),
       author: photo.author,
       link: photo.link
     };
@@ -45,6 +44,38 @@ export async function index(req: Request, res: Response, next: NextFunction) {
   });
 }
 
+export async function indexPerAuthor(req: Request, res: Response, next: NextFunction){
+    const user_id = req.cookies['user-id']
+    const photos = await prisma.photo.findMany({
+        where: { authorId: user_id },
+        include: {
+            categories: {
+                select: { name: true }
+            },
+            author: {
+              select: { name: true, email: true, id: true}
+            }
+        }
+    })
+    if(photos.length > 0){
+      res.json({
+        message: 'Photos found successfully.',
+        status: 200,
+        error: false,
+        data: photos.map((photo) => {
+            return {
+                ...photo,
+                categories: photo.categories.map((category) => category.name.toLowerCase().trim())
+            }
+        })
+    })
+    } else {
+        next(new CustomError('No photos found.', 501))
+        return
+    }
+    
+    
+}
 export async function store(req: Request, res: Response, next: NextFunction) {
   const validations: Result = validationResult(req);
   if (!validations.isEmpty()) {
@@ -79,7 +110,7 @@ export async function store(req: Request, res: Response, next: NextFunction) {
     req.body.title,
     req.body.description,
     req.body.visible,
-    req.body.categories,
+    req.body.categories ? req.body.categories.split(",") : ["general"],
     imageSlug
   );
   await prisma.photo
@@ -97,8 +128,8 @@ export async function store(req: Request, res: Response, next: NextFunction) {
         categories: {
           connectOrCreate: photo.categories.map((category: string) => {
             return {
-              where: { name: category },
-              create: { name: category },
+              where: { name: category.toLowerCase().trim() },
+              create: { name: category.toLowerCase().trim() },
             };
           }),
         },
@@ -124,7 +155,7 @@ export async function store(req: Request, res: Response, next: NextFunction) {
         error: false,
         data: {
             ...photo,
-            categories: photo.categories.map((category) => category.name)
+            categories: photo.categories.map((category) => category.name.toLowerCase().trim())
         }
        
         
@@ -168,7 +199,7 @@ export async function show(req: Request, res: Response, next: NextFunction) {
         photo.title, 
         photo.description, 
         photo.visible, 
-        photo.categories.map((category) => category.name), 
+        photo.categories.map((category) => category.name.toLowerCase().trim()), 
         photo.link,
         photo.author)
     
@@ -230,6 +261,7 @@ export async function deletePhoto(
 }
 
 export async function edit(req: Request, res: Response, next: NextFunction){
+    console.log(req.body)
     const result : Result = validationResult(req)
 
     if(!result.isEmpty()){
@@ -237,6 +269,7 @@ export async function edit(req: Request, res: Response, next: NextFunction){
         return
     }
     const { title, description, visible, categories } = req.body
+    
     if(Object.keys(req.body).length === 0 && !req.file){
         next(new CustomError('You must provide at least one field to edit.', 500))
         return
@@ -244,7 +277,8 @@ export async function edit(req: Request, res: Response, next: NextFunction){
     const { id } = req.params
     const user_id = req.cookies['user-id']
     const oldPhoto = await prisma.photo.findUniqueOrThrow({ where: { id }, include: { categories: true}})
-    const photo = new PhotoClass(title, description, visible, categories ?? ["general"], oldPhoto.link)
+    const photo = new PhotoClass(title, description, visible, categories ? categories.split(',') : ["general"], oldPhoto.link)
+   
     let isEditable = true
     
    const newPhoto = await prisma.photo.update({
@@ -283,12 +317,20 @@ export async function edit(req: Request, res: Response, next: NextFunction){
     
     
     if(newPhoto && isEditable){
-        if(req.file){
-            console.log('diocane')
-            fs.unlinkSync(path.resolve(`./public/images/${oldPhoto.link}`))
+        if(req.file && req.file?.size > 0){
+            if(!oldPhoto.link.includes('placeholder')){
+              fs.unlinkSync(path.resolve(`./public/images/${oldPhoto.link}`))
+            }
             const imageSlug = req.file.filename + '.jpg'
-            fs.renameSync(req.file.path, path.resolve(`./public/images/${imageSlug}`))
-            photo.link = imageSlug
+              fs.renameSync(req.file.path, path.resolve(`./public/images/${imageSlug}`))
+              await prisma.photo.update({
+                where: { id: oldPhoto.id},
+                data: {
+                  link: imageSlug
+                }
+              })
+              newPhoto.link = imageSlug
+            
         }  
 
         res.json({

@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client"
-const prisma = new PrismaClient()
+import { prisma } from "../server"
 const cookieParser = require('cookie-parser')
 const user_id = cookieParser.JSONCookies['user-id']
 
@@ -57,11 +57,7 @@ export  = {
     },
     categories: {
         optional: true,
-        in: ["body"],
-        isArray: {
-            bail: true,
-            errorMessage: 'Categories must be provided and have to be an array.',
-        },
+        in: ["body"]
     }
 }
 

@@ -35,10 +35,6 @@ export  = {
     },
     categories: {
         in: ["body"],
-        isArray: {
-            bail: true,
-            errorMessage: 'Categories must be provided and have to be an array.',
-        },
     }
 }
 

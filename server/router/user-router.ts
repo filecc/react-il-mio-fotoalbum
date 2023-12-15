@@ -7,6 +7,7 @@ const userLogin = require('../validations/user-login')
 const express = require('express')
 
 const userRouter = express.Router();
+userRouter.use(express.json())
 userRouter.post('/login', checkSchema(userLogin), login)
 userRouter.get('/logout', logout)
 userRouter.get('/isLogged', isLogged)

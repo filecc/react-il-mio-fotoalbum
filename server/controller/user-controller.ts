@@ -5,7 +5,7 @@ import { comparePassword } from "../lib/utils/functions";
 import { PrismaClient } from "@prisma/client";
 import jwt from 'jsonwebtoken'
 
-const prisma = new PrismaClient()
+import { prisma } from "../server"
 
 export async function login(req: Request, res: Response, next: NextFunction){
     const validations : Result = validationResult(req);
