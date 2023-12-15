@@ -77,12 +77,14 @@ export default function Profile() {
       {user && (
         <div className="flex items-center justify-between w-full pr-6">
           <div className="flex items-center gap-2 self-start p-6">
-            <span className="w-10 h-10 bg-gray-400 rounded-full grid place-items-center font-bold">
+            <span className="w-10 h-10 bg-gray-400 rounded-full grid place-items-center font-bold dark:text-gray-100">
               {user.name.charAt(0).toUpperCase()}
             </span>
-            <small className="font-base font-bold">{user.name}</small>
+            <small className="font-base font-bold text-gray-900 dark:text-gray-200">{user.name}</small>
           </div>
           <AddForm />
+          <div className="flex items-center gap-2">
+          <span className="font-bold text-gray-800 dark:text-white"><TrashIcon className={classNames("w-6 h-6", enabled ? 'text-red-600' : '')} /></span>
           <Switch
             checked={enabled}
             onChange={() => {
@@ -104,14 +106,15 @@ export default function Profile() {
               )}
             />
           </Switch>
+          </div>
         </div>
       )}
       {photos.length === 0 ? (
         <p>No photos</p>
       ) : (
         <>
-          <p className="font-bold">Your Feed</p>
-          <div className="w-full max-w-xl">
+          <p className="font-bold text-gray-800 dark:text-white">Your Feed</p>
+          <div className="w-full max-w-xl px-4">
           <input type="text" value={filter} onChange={(e) => {
             setFilter(e.target.value)
             handleFilter()

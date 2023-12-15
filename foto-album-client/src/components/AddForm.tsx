@@ -78,12 +78,12 @@ export default function AddForm() {
       </button>
       {open &&
           <div className="fixed top-0 right-0 bottom-0 left-0 z-10 backdrop-blur-sm bg-black/50 grid place-items-center p-10">
-            <div className="container max-w-xl mx-auto p-6 bg-white z-10 flex flex-col gap-6 rounded-lg shadow-xl max-h-[95%] overflow-y-auto">
+            <div className="container max-w-xl mx-auto p-6 bg-white dark:bg-gray-700 text-gray-800 dark:text-white z-10 flex flex-col gap-6 rounded-lg shadow-xl max-h-[95%] overflow-y-auto">
               <button
-                className="self-end text-gray-800 dark:text-white"
+                className="self-end"
                 onClick={handleClose}
               >
-                <XMarkIcon className="w-8 h-8" />
+                <XMarkIcon className="w-8 h-8 text-gray-800 dark:text-white" />
               </button>
               <h1 className="font-medium text-2xl">Add a new photo</h1>
               <form
@@ -98,19 +98,19 @@ export default function AddForm() {
                 {error && <p className="text-red-400 text-center">{errorMessage}</p>}
                 <div className="pt-3">
                   <label
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    className="block text-sm font-medium leading-6 text-gray-900 dark:text-white/80"
                     htmlFor="file"
                   >
                     Image
                   </label>
                   <input className={classNames(
                     fieldError("file", fields) ? "border-red-500" : "",
-                    "block pt-2"
+                    "text-sm file:mr-5 file:py-2.5 file:rounded-l-md file:px-3 file:text-sm file:bg-gray-50 dark:file:bg-gray-600 dark:file:text-gray-100 file:text-gray-700 hover:file:cursor-pointer file:border-none ring-2 rounded-md dark:ring-gray-500 ring-gray-200 mt-2 text-gray-800 dark:text-gray-200"
                   )} name="file" type="file" />
                 </div>
                 <div className="pt-3">
                   <label
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    className="block text-sm font-medium leading-6 text-gray-900 dark:text-white/80"
                     htmlFor="title"
                   >
                     Title
@@ -118,7 +118,7 @@ export default function AddForm() {
                   <input
                     className={classNames(
                       fieldError("title", fields) ? "ring-red-500" : "ring-gray-300",
-                      "block w-full rounded-md border-0 py-2.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                      "block w-full rounded-md border-0 py-2.5 px-2 dark:bg-gray-700 text-gray-900 dark:text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 mt-2"
                     )}
                     name="title"
                     type="text"
@@ -129,7 +129,7 @@ export default function AddForm() {
                 <div className="pt-3">
                   <label
                     htmlFor="description"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    className="block text-sm font-medium leading-6 text-gray-900 dark:text-white/80"
                   >
                     Description
                   </label>
@@ -140,20 +140,20 @@ export default function AddForm() {
                       id="description"
                       className={classNames(
                         fieldError("description", fields) ? "ring-red-500" : "",
-                        "p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        "p-2 block w-full rounded-md border-0 py-1.5 dark:bg-gray-700 text-gray-900 dark:text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       )}
                      placeholder="Insert a description"
                     />
                     {error && <p className="text-red-500 text-center">{fieldError("description", fields)}</p>}
                   </div>
                 </div>
-                <div className="pt-3">
+                <div className="pt-3 mt-2">
                   <RadioGroup
                     className={"flex items-center gap-4 justify-between"}
                     value={visibility}
                     onChange={setVisibility}
                   >
-                    <RadioGroup.Label className="block text-sm font-medium leading-6 text-gray-900">
+                    <RadioGroup.Label className="block text-sm font-medium leading-6 text-gray-900 dark:text-white/80">
                       Visibility of your photo
                     </RadioGroup.Label>
                     <div className="flex items-center gap-5">
@@ -191,7 +191,7 @@ export default function AddForm() {
                 <div className="pt-3">
                   <label
                     htmlFor="categories"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    className="block text-sm font-medium leading-6 text-gray-900 dark:text-white/80"
                   >
                     Categories
                   </label>
@@ -222,7 +222,7 @@ export default function AddForm() {
                   )}
                   <div className="flex items-center justify-between mt-2 gap-2">
                     <input
-                      className="flex-1 block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                      className="flex-1 block w-full rounded-md border-0 py-1.5 px-2 dark:bg-gray-700 text-gray-900 dark:text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
                       name="categoriesNew"
                       type="text"
                       placeholder="Add a category"
