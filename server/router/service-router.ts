@@ -1,5 +1,4 @@
 import notFound from '../middlewares/not-found';
-import { checkSchema } from 'express-validator';
 import erroHandler from '../middlewares/errors';
 import multer from 'multer';
 import { sendMessage } from '../controller/service-controller';
