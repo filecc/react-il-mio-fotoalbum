@@ -4,11 +4,13 @@ import { HeartIcon } from "@heroicons/react/24/outline";
 
 export default function Photo({ photo }: { photo: Photo }) {
   const url = useContext(UrlContext);
+  const difference = Math.round((Date.now() - new Date(photo.created_at).getTime())) / 1000 / 60 / 60 / 24
+  console.log(difference)
   const posted =
     Math.round(
       (Date.now() - new Date(photo.created_at).getTime()) / 1000 / 60 / 60 / 24
     ) === 0
-      ? Math.round((Date.now() - new Date(photo.created_at).getTime())/1000/60/60) + " hours ago"
+      ? " today"
       : Math.round(
           (Date.now() - new Date(photo.created_at).getTime()) /
             1000 /
