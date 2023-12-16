@@ -14,6 +14,7 @@ interface Photo {
     categories: string[];
     author: User;
     created_at: string
+    available: boolean;
 }
 
 interface FieldError {

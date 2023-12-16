@@ -9,7 +9,7 @@ import { prisma } from "../server";
 
 export async function index(req: Request, res: Response, next: NextFunction) {
   const photos = await prisma.photo.findMany({
-    where: { visible: true },
+    where: { visible: true, available: true },
     include: {
       categories: {
         select: { name: true },
@@ -79,7 +79,7 @@ export async function indexPerAuthor(req: Request, res: Response, next: NextFunc
 export async function indexPerAuthorPublic(req: Request, res: Response, next: NextFunction){
     const user_id = req.params.id
     const photos = await prisma.photo.findMany({
-        where: { authorId: user_id, visible: true },
+        where: { authorId: user_id, visible: true, available: true },
         include: {
             categories: {
                 select: { name: true }

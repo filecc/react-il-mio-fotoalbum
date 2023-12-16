@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { UrlContext } from "../lib/context/UrlContext";
 import { classNames, fieldError } from "../lib/utils/functions";
 import {
+  ExclamationTriangleIcon,
   EyeIcon,
   EyeSlashIcon,
   PlusIcon,
@@ -66,6 +67,25 @@ export default function EditForm({
     setNewCategory("");
     setVisibility(photo.visible);
   }
+  if(!photo.available) return <button className={classes}>
+  <img
+    src={`${url}images/${photo.link}`}
+    alt={photo.title + " image"}
+    className={classNames(
+      photo.visible ? "opacity-100" : "opacity-20 brightness-50",
+      "w-full h-full object-cover rounded"
+    )}
+  />
+  {!photo.visible && (
+    <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-700 font-bold grid place-items-center">
+      {" "}
+      <ExclamationTriangleIcon className="w-5 h-5" />{" "}
+      <span className="text-xs text-center pt-2">
+        Not available
+      </span>{" "}
+    </span>
+  )}
+</button>
 
   return (
     <>
