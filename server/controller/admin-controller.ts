@@ -1,6 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 
-export default async function index(req: Request, res: Response, next: NextFunction) {
-    res.json('Admin index')
+
+
+export async function home(req: Request, res: Response, next: NextFunction) {
+    res.json({
+        message: 'Welcome to the admin page',
+        code: 200,
+        error: false
+    })
     return
 }

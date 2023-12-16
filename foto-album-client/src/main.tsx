@@ -15,6 +15,7 @@ import Loader from "./components/Loader.tsx";
 import ErrorPage from "./error-page.tsx";
 import UserPublic from "./components/UserPublic.tsx";
 import Register from "./components/Register.tsx";
+import Home from "./components/admin/Home.tsx";
 
 const checkUserLogged = async () => {
   const res = await fetch("http://localhost:4000/user/isLogged", {
@@ -27,6 +28,27 @@ const checkUserLogged = async () => {
   return true
 }
 
+const checkAdmin = async () => {
+  const res = await fetch("http://localhost:4000/admin/", {
+    credentials: "include",
+  })
+  const data = await res.json()
+  if (data.code != 200) {
+    return redirect("/login");
+  }
+  return true
+}
+const redirectLoggedUser = async () => {
+  const res = await fetch("http://localhost:4000/user/isLogged", {
+    credentials: "include",
+  })
+  const data = await res.json()
+  if (data.result) {
+    return redirect("/profile");
+  }
+  return true
+}
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -35,11 +57,13 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Login />
+    element: <Login />,
+    loader: redirectLoggedUser
   },
   {
     path: "/register",
     element: <Register />,
+    loader: redirectLoggedUser
   },
   {
     path: "/profile",
@@ -63,6 +87,11 @@ const router = createBrowserRouter([
       })
       return redirect("/")
     }
+  },
+  {
+    path: "/admin",
+    element: <Home />,
+    loader: checkAdmin
   }
 ]);
 
