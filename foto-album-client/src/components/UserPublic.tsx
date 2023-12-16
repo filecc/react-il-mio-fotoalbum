@@ -126,8 +126,8 @@ export default function UserPublic() {
         )}
       </div>
       {fullsize && fullsizePhoto && (
-        <div className="fixed top-0 right-0 bottom-0 left-0 bg-black/80 grid place-items-center">
-          <div>
+        <div className="fixed top-0 right-0 bottom-0 left-0 bg-black/80 grid place-items-center h-full">
+          <div className="max-h-[90%] overscroll-y-auto">
             <div className="text-end">
               <button onClick={() => {
                 setFullsize(false)
@@ -136,10 +136,10 @@ export default function UserPublic() {
                 <XMarkIcon className="w-10 h-10 text-white" />
               </button>
             </div>
-            <div className="p-2 max-h-[90%] overflow-y-auto">
+            <div className="p-2 h-full overflow-y-auto">
               <img
                 onClick={() => {}}
-                className="w-full h-full max-h-[80%] object-cover rounded shadow-md"
+                className="w-full h-full max-h-[600px] object-cover rounded shadow-md"
                 src={url + "images/" + fullsizePhoto.link}
                 alt=""
               />

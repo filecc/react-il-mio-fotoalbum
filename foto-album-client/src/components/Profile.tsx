@@ -118,10 +118,10 @@ export default function Profile() {
           <input type="text" value={filter} onChange={(e) => {
             setFilter(e.target.value)
             handleFilter()
-          }} placeholder="Search by title" className="my-4 block w-full rounded-md border-0 dark:bg-gray-700 text-gray-900 dark:text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2"
+          }} placeholder="Search by title" className="my-4 block w-full rounded-md border-0 dark:bg-gray-700 text-gray-900 dark:text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 p-2"
            />
+           {filter != '' && filteredPhotos.length === 0 && <p className="text-center text-gray-900 dark:text-gray-200">No photos found with title "{filter}"</p>}
           </div>
-         
           <section className="grid grid-cols-3 gap-x-4 gap-y-6 h-full p-2 place-items-center">
             {(filter != '' ? filteredPhotos : photos).map((photo) => (
               <div className="relative" key={photo.id}>

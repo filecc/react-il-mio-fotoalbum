@@ -1,4 +1,4 @@
-
+import CTA from "./components/CTA"
 
 function App() {
 
@@ -56,6 +56,7 @@ function App() {
           />
         </div>
       </div>
+      <CTA />
     </>
   )
 }

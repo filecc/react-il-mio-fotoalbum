@@ -43,7 +43,7 @@ export default function Example() {
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 justify-between">
-              <div className="flex justify-between">
+              <div className="flex justify-between w-full">
                 <div className="flex flex-shrink-0 items-center">
                   <p className="text-gray-900 dark:text-gray-200">
                     The Photo-Blog

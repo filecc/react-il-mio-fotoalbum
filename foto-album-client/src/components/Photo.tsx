@@ -8,7 +8,7 @@ export default function Photo({ photo }: { photo: Photo }) {
     Math.round(
       (Date.now() - new Date(photo.created_at).getTime()) / 1000 / 60 / 60 / 24
     ) === 0
-      ? "today"
+      ? Math.round((Date.now() - new Date(photo.created_at).getTime())/1000/60/60) + " hours ago"
       : Math.round(
           (Date.now() - new Date(photo.created_at).getTime()) /
             1000 /

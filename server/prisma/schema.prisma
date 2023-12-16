@@ -37,3 +37,10 @@ model User {
   createdAt DateTime @default(now())
   photos    Photo[]
 }
+
+model Message {
+  id String @id @default(uuid())
+  email String @db.VarChar(255)
+  message String @db.Text
+  created_at DateTime @default(now())
+}
