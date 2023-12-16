@@ -9,6 +9,7 @@ const express = require('express')
 import { PrismaClient } from '@prisma/client';
 import multer from 'multer';
 import { serviceRouter } from './router/service-router';
+import { adminRouter } from './router/admin-router';
 export const prisma = new PrismaClient();
 
 const app = express();
@@ -35,6 +36,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/user', userRouter)
 app.use('/api', apiRouter);
 app.use('/service', serviceRouter)
+app.use('/admin', adminRouter)
 
 app.use(notFound)
 app.use(erroHandler)
