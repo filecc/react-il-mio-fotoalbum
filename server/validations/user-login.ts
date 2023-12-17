@@ -2,7 +2,7 @@ import { prisma } from "../server";
 
 export = {
     email: {
-      in: ["body"],
+      in: ["formData"],
       isLength: {
           options: { min: 1 },
           errorMessage: "Email missing.",
@@ -22,7 +22,7 @@ export = {
       }
     },
     password: {
-      in: ["body"],
+      in: ["formData"],
       isString: {
         errorMessage: "Password missing.",
       }
