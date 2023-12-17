@@ -3,11 +3,7 @@ import { prisma } from "../server";
 
 export = {
     email: {
-      in: ["body"],
-      isString: {
-          errorMessage: "Email is required.",
-          bail: true,   
-      },
+      in: ["formData"],
       isEmail: {
           errorMessage: "Not a valid email.",
           bail: true
@@ -22,7 +18,7 @@ export = {
       }
     },
     name: {
-        in: ["body"],
+        in: ["formData"],
         isLength: {
             options: { min: 3 },
             errorMessage: "Name must be 3 at least characters long.",
@@ -34,17 +30,16 @@ export = {
         },
     },
     password: {
-      in: ["body"],
-      isString: {
-        errorMessage: "Password is required.",
-      }
+      in: ["formData"],
+      isLength: {
+        options: { min: 5 },
+        errorMessage: "Password must be 5 at least characters long.",
+        bail: true,
+    },
       
     },
     password_control: {
-        in: ["body"],
-        isString: {
-            errorMessage: "Type again your password.",
-        },
+        in: ["formData"],
         custom: {
             options: async (value: string, { req }:{req: Request}) => {
             if(value !== req.body.password){
