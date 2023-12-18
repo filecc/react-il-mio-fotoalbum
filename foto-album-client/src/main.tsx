@@ -33,10 +33,12 @@ const checkAdmin = async () => {
     credentials: "include",
   })
   const data = await res.json()
+  console.log(data)
   if (data.code != 200) {
     return redirect("/login");
-  }
+  } 
   return true
+  
 }
 const redirectLoggedUser = async () => {
   const res = await fetch("http://localhost:4000/user/isLogged", {

@@ -41,6 +41,7 @@ export default function Dashboard() {
     const photo = info?.data.find(item => item.id === id)
     const res = await fetch(url + 'admin/photos/' + id, {
       credentials: "include",
+      headers: { "Content-Type": "application/json"},
       method: "POST",
       body: JSON.stringify({available: photo?.available})
     })

@@ -11,7 +11,7 @@ adminRouter.use(admin)
 
 adminRouter.get('/', home)
 adminRouter.get('/photos', index)
-adminRouter.post('/photos/:id', multer().none(), changeAvailability)
+adminRouter.post('/photos/:id', changeAvailability)
 
 adminRouter.use(notFound)
 adminRouter.use(erroHandler)

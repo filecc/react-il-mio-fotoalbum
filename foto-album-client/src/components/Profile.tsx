@@ -7,10 +7,11 @@ import EditForm from "./EditForm";
 import AddForm from "./AddForm";
 import { Switch } from "@headlessui/react";
 import { classNames } from "../lib/utils/functions";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { ArrowRightIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 export default function Profile() {
   const [user, setUser] = useState<User>();
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const { update, setUpdate } = useContext(UpdateContext);
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -52,6 +53,22 @@ export default function Profile() {
     getUserPhoto();
   }, [update, url]);
 
+  useEffect(() => {
+    async function checkAdmin () {
+      const res = await fetch("http://localhost:4000/admin/", {
+        credentials: "include",
+      })
+      const data = await res.json()
+    
+      if (data.code === 200) {
+       setIsAdmin(true)
+      } 
+     
+    }
+    checkAdmin()
+    
+  }, [url, update])
+
   const handleDelete = async (id: string) => {
     setLoadingDelete(true)
     const res = await fetch(url + "api/photos/delete/" + id, {
@@ -83,6 +100,7 @@ export default function Profile() {
             <small className="font-base font-bold text-gray-900 dark:text-gray-200">{user.name}</small>
           </div>
           <AddForm />
+          {isAdmin && <a className="px-3 py-1.5 bg-blue-600 text-blue-50 rounded flex items-center gap-1" href="/admin/dashboard">Dashboard <ArrowRightIcon className="w-4 h-4" /></a>}
           <div className="flex items-center gap-2">
           <span className="font-bold text-gray-800 dark:text-white"><TrashIcon className={classNames("w-6 h-6", enabled ? 'text-red-600' : '')} /></span>
           <Switch

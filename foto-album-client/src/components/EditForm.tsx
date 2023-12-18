@@ -47,7 +47,6 @@ export default function EditForm({
       body: formData,
     });
     const result = await res.json();
-    // manage error
     if(result.status == 200){
       setCategories(result.data.categories);
       setIsOpen(false);
@@ -67,16 +66,13 @@ export default function EditForm({
     setNewCategory("");
     setVisibility(photo.visible);
   }
-  if(!photo.available) return <button className={classes}>
+  if(photo.available === false) return <button className={classes}>
   <img
     src={`${url}images/${photo.link}`}
     alt={photo.title + " image"}
-    className={classNames(
-      photo.visible ? "opacity-100" : "opacity-20 brightness-50",
-      "w-full h-full object-cover rounded"
-    )}
+    className="opacity-20 brightness-50 w-full h-full object-cover rounded"
   />
-  {!photo.visible && (
+ 
     <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-700 font-bold grid place-items-center">
       {" "}
       <ExclamationTriangleIcon className="w-5 h-5" />{" "}
@@ -84,7 +80,6 @@ export default function EditForm({
         Not available
       </span>{" "}
     </span>
-  )}
 </button>
 
   return (
