@@ -32,7 +32,6 @@ export default function Register() {
       }),
     });
     const result = await res.json();
-   console.log(result)
     if(result.code != 200){
       setError([true, result.error]);
       setFields(result.messages)

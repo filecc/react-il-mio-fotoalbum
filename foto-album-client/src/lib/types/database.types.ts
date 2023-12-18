@@ -5,6 +5,7 @@ interface User {
     id: number;
 }
 
+
 interface Photo {
     id: string;
     title: string;
@@ -15,6 +16,7 @@ interface Photo {
     author: User;
     created_at: string
     available: boolean;
+    likes: string[]
 }
 
 interface FieldError {

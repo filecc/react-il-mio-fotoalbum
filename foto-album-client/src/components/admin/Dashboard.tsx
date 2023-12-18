@@ -27,7 +27,6 @@ export default function Dashboard() {
         credentials: "include",
       });
       const result = await res.json();
-      console.log(result);
       if (result.code == 200) {
         setInfo(result);
       }
@@ -43,8 +42,7 @@ export default function Dashboard() {
       headers: { "Content-Type": "application/json"},
       method: "POST"
     })
-    const result = await res.json()
-    console.log(result)
+    await res.json()
   }
 
   if (loading) return <Loader />;

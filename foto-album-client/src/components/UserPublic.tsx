@@ -8,10 +8,10 @@ import {
   RectangleGroupIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { HeartIcon } from "@heroicons/react/24/solid";
 import Photo from "./Photo";
 import { Switch } from "@headlessui/react";
 import { classNames } from "../lib/utils/functions";
+import { UpdateContext } from "../lib/context/UpdateContext";
 
 export default function UserPublic() {
   const [user, setUser] = useState<User>();
@@ -23,6 +23,7 @@ export default function UserPublic() {
   const [enabled, setEnabled] = useState(false);
   const [fullsize, setFullsize] = useState(false);
   const [fullsizePhoto, setFullsizePhoto] = useState<Photo>();
+  const { update } = useContext(UpdateContext)
 
   useEffect(() => {
     async function getUser() {
@@ -51,7 +52,7 @@ export default function UserPublic() {
     }
     getUser();
     getUserPhoto();
-  }, [url, userID]);
+  }, [url, userID, update]);
 
   if (loading) return <Loader />;
   if (!user) return <ErrorPage />;
@@ -68,11 +69,6 @@ export default function UserPublic() {
           <small className="flex items-center gap-1">
             {" "}
             <PhotoIcon className="w-6 h-6" /> {photos.length} photos
-          </small>
-          <small className="flex items-center gap-1">
-            {" "}
-            <HeartIcon className="w-6 h-6 text-red-500" />{" "}
-            {Math.floor(Math.random() * 4000)} likes
           </small>
         </div>
       </div>

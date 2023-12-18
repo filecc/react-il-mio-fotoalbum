@@ -17,6 +17,9 @@ export async function index(req: Request, res: Response, next: NextFunction) {
       author: {
         select: { name: true, email: true, id: true },
       },
+      likes: {
+        select: { userId: true, photoId: true}
+      }
     },
     orderBy: { created_at: "desc" },
   });
@@ -33,7 +36,8 @@ export async function index(req: Request, res: Response, next: NextFunction) {
       created_at: photo.created_at,
       categories: photo.categories.map((category) => category.name.toLowerCase().trim()),
       author: photo.author,
-      link: photo.link
+      link: photo.link,
+      likes: photo.likes.map((like) => like.userId)
     };
   });
   res.json({
@@ -53,6 +57,9 @@ export async function indexPerAuthor(req: Request, res: Response, next: NextFunc
             },
             author: {
               select: { name: true, email: true, id: true}
+            },
+            likes: {
+              select: { userId: true, photoId: true}
             }
         },
         orderBy: { created_at: "desc" }
@@ -65,7 +72,8 @@ export async function indexPerAuthor(req: Request, res: Response, next: NextFunc
         data: photos.map((photo) => {
             return {
                 ...photo,
-                categories: photo.categories.map((category) => category.name.toLowerCase().trim())
+                categories: photo.categories.map((category) => category.name.toLowerCase().trim()),
+                likes: photo.likes.map((like) => like.userId)
             }
         })
     })
@@ -86,6 +94,12 @@ export async function indexPerAuthorPublic(req: Request, res: Response, next: Ne
             },
             author: {
               select: { name: true, email: true}
+            },
+            likes: {
+              select: { userId: true, photoId: true}
+            },
+            _count: {
+              select: { likes: true }
             }
         },
         orderBy: { created_at: "desc" }
@@ -98,7 +112,8 @@ export async function indexPerAuthorPublic(req: Request, res: Response, next: Ne
         data: photos.map((photo) => {
             return {
                 ...photo,
-                categories: photo.categories.map((category) => category.name.toLowerCase().trim())
+                categories: photo.categories.map((category) => category.name.toLowerCase().trim()),
+                likes: photo.likes.map((like) => like.userId)
             }
         })
     })
@@ -220,6 +235,12 @@ export async function show(req: Request, res: Response, next: NextFunction) {
       },
       author: {
         select: { name: true, email: true, id: true },
+      },
+      likes: {
+        select: { userId: true, photoId: true}
+      },
+      _count: {
+        select: { likes: true }
       }
     },
   }).catch((err) => {
@@ -227,19 +248,15 @@ export async function show(req: Request, res: Response, next: NextFunction) {
     return;
   })
   if(photo){
-    const photoToSend = new PhotoClass(
-        photo.title, 
-        photo.description, 
-        photo.visible, 
-        photo.categories.map((category) => category.name.toLowerCase().trim()), 
-        photo.link,
-        photo.author)
-    
       res.json({
         message: "Photo found successfully.",
         status: 200,
         error: false,
-        data: photoToSend,
+        data: {
+          ...photo,
+          categories: photo.categories.map((category) => category.name.toLowerCase().trim()),
+          likes: photo.likes.map((like) => like.userId)
+        }
       })
   }
   
@@ -367,4 +384,52 @@ export async function edit(req: Request, res: Response, next: NextFunction){
             data: {...newPhoto, categories: newPhoto.categories.map((category) => category.name)}}) 
     }
     
+}
+
+export async function handleLike(req: Request, res: Response, next: NextFunction){
+  const result: Result = validationResult(req)
+  if(!result.isEmpty()){
+    next(new CustomError('There are some errors. Check out them.', 500, result.array()))
+    return
+  }
+  const { id } = req.params
+  const user_id = req.cookies['user-id']
+  const photo = await prisma.photo.findFirst(
+    { where: { id },
+      include: {
+        likes: {
+          select: { userId: true}
+        }
+      }
+  })
+  if(!photo){
+    next(new CustomError('Photo not found.', 501))
+    return
+  }
+  const likes = photo.likes.map((like) => like.userId)
+  if(!likes.includes(user_id)){
+    const like = await prisma.like.create({
+      data: {
+        userId: user_id,
+        photoId: id
+      }
+    })
+    res.json({
+      message: 'Photo liked successfully.',
+      status: 200,
+      error: false,
+      data: like
+    })
+    return
+  }
+  
+  const like = await prisma.like.deleteMany({
+    where: { userId: user_id, photoId: photo.id}
+  })
+  res.json({
+    message: 'Photo disliked successfully.',
+    status: 200,
+    error: false,
+    data: like
+  })
 }

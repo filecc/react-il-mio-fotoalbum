@@ -7,6 +7,7 @@ import { UrlContext } from "./lib/context/UrlContext";
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [isLogged, setIsLogged] = useState(false);
   const [update, setUpdate] = useState(false);
+  const [user_id, setUser_id] = useState<string>('');
   const url = useContext(UrlContext);
   useEffect(() => {
     async function isUserLoggedIn() {
@@ -21,7 +22,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         setIsLogged(false);
       }
     }
-
+    async function getUserDetail(){
+      const res = await fetch(url + "user/userDetails", {
+        credentials: "include"
+      })
+      const result = await res.json()
+      if(result.data){
+        setUser_id(result.data.id)
+      }
+    }
+    getUserDetail()
     isUserLoggedIn();
   });
 
@@ -32,6 +42,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           value={{
             isLogged,
             setIsLogged,
+            user_id
           }}
         >
           <Navbar />

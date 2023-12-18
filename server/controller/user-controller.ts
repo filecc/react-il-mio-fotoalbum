@@ -55,7 +55,6 @@ export async function login(req: Request, res: Response, next: NextFunction){
         return
     }
 
-    console.log(validations)
     const { email, password } = req.body
     const user = await prisma.user.findFirst({
         where: { email: email },

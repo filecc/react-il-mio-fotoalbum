@@ -1,4 +1,4 @@
-import { deletePhoto, edit, index, indexPerAuthor, indexPerAuthorPublic, show, store } from '../controller/photo-controller';
+import { deletePhoto, edit, index, indexPerAuthor, indexPerAuthorPublic, show, store, handleLike } from '../controller/photo-controller';
 const express = require('express')
 import notFound from '../middlewares/not-found';
 import { checkSchema } from 'express-validator';
@@ -26,6 +26,7 @@ apiRouter.get('/photo/:id', checkSchema(showPhotoValidation), show)
 apiRouter.put('/photos/edit/:id', editMiddleware, edit)
 apiRouter.get('/photos/user', userMiddleware, indexPerAuthor)
 apiRouter.get('/photos/user-public/:id', indexPerAuthorPublic)
+apiRouter.post('/photos/like/:id', auth, handleLike)
 
 apiRouter.use(notFound)
 apiRouter.use(erroHandler)
