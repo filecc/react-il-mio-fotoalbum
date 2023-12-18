@@ -40,8 +40,8 @@ export default function AddForm() {
     const result = await res.json();
     if(result.status == 200){
         setCategories(result.data.categories);
-        setIsOpen(false);
         setUpdate(!update);
+        handleClose()
     } else {
        // manage error
        setError([true, result.error])
