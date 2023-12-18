@@ -1,4 +1,4 @@
-import { deletePhoto, edit, index, indexPerAuthor, indexPerAuthorPublic, show, store, handleLike } from '../controller/photo-controller';
+import { deletePhoto, edit, index, indexPerAuthor, indexPerAuthorPublic, show, store, handleLike, feed } from '../controller/photo-controller';
 const express = require('express')
 import notFound from '../middlewares/not-found';
 import { checkSchema } from 'express-validator';

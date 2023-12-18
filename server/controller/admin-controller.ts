@@ -81,8 +81,6 @@ export async function index(req: Request, res: Response, next: NextFunction) {
         total: photos.length,
         nextPage,
         previousPage
-
-       
     })
 
 }

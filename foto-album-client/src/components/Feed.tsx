@@ -11,25 +11,28 @@ export default function Feed(){
     const { update } = useContext(UpdateContext)
     const [filter, setFilter] = useState<string>('')
     const [filteredPhotos, setFilteredPhotos] = useState<Photo[]>([])
+   
+
+    async function getPhotos(){
+        const res = await fetch(url + "api/photos")
+        const data = await res.json()
+        if(data.photos){
+            setPhotos(data.photos)
+        }
+        setLoading(false)
+    }
     
     useEffect(() => {
-        const getPhotos = async () => {
-            const res = await fetch(url + "api/photos")
-            const data = await res.json()
-            if(data.photos){
-                setPhotos(data.photos)
-            }
-            setLoading(false)
-        }
         getPhotos()
+        
     }, [update, url])
     const handleFilter = () => {
         setFilteredPhotos( photos.filter((photo) => photo.title.toLowerCase().includes(filter.toLowerCase().trim())))
       }
+    
 
 
     if(loading) return <Loader />
-
     return (<>
     {photos.length === 0 
     ? <p>No photos</p> 
@@ -42,8 +45,8 @@ export default function Feed(){
            />
            {filter != '' && filteredPhotos.length === 0 && <p className="text-center text-gray-900 dark:text-gray-200">No photos found with title "{filter}"</p>}
           </div>
-        <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full h-full p-2 place-items-center">
-            {(filter != '' ? filteredPhotos : photos).map((photo) => <Photo key={photo.id} photo={photo} />)}
+        <section id="picsContainer" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full h-full p-2 place-items-center">
+            {(filter != '' ? filteredPhotos : photos).map((photo) => <div key={photo.id}><Photo photo={photo} /></div>)}
         </section>  
     </div>
     }

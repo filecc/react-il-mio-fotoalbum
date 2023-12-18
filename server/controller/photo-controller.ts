@@ -385,7 +385,6 @@ export async function edit(req: Request, res: Response, next: NextFunction){
     }
     
 }
-
 export async function handleLike(req: Request, res: Response, next: NextFunction){
   const result: Result = validationResult(req)
   if(!result.isEmpty()){
@@ -432,4 +431,46 @@ export async function handleLike(req: Request, res: Response, next: NextFunction
     error: false,
     data: like
   })
+}
+export async function feed(req: Request, res: Response, next: NextFunction) {
+  const photos = await prisma.photo.findMany({
+    where: { visible: true, available: true },
+    include: {
+      categories: {
+        select: { name: true },
+      },
+      author: {
+        select: { name: true, email: true, id: true },
+      },
+      likes: {
+        select: { userId: true, photoId: true}
+      }
+    },
+    orderBy: { created_at: "desc" },
+  });
+  if (!photos || photos.length === 0) {
+    next(new CustomError("No photos found.", 501));
+    return;
+  }
+  const mappedPhotos = photos.map((photo) => {
+    return {
+      id: photo.id,
+      title: photo.title,
+      description: photo.description,
+      visible: photo.visible,
+      created_at: photo.created_at,
+      categories: photo.categories.map((category) => category.name.toLowerCase().trim()),
+      author: photo.author,
+      link: photo.link,
+      likes: photo.likes.map((like) => like.userId)
+    };
+  });
+
+
+  res.json({
+    message: "Photos found successfully.",
+    status: 200,
+    error: false,
+    photos: mappedPhotos.slice(0, 3),
+  });
 }
