@@ -67,7 +67,7 @@ export default function Dashboard() {
       <div className="mt-8 flow-root">
         
         <div className="flex items-center justify-between gap-2 pb-6">
-        <p>Results per page</p>
+        <p>Results per page <span className="text-xs text-gray-400">({info.total} results)</span></p>
         <div className="flex items-center gap-2">
         {[1, 3, 5, 10].map((item) => {
             return (
@@ -83,7 +83,7 @@ export default function Dashboard() {
                   setActualPage(null);
                 }}
                 key={item + Math.random() * 500}
-                disabled={item > info.total ? true : false}
+                /* disabled={item > info.total ? true : false} */
               >
                 {item}
               </button>
