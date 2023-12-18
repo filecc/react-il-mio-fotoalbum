@@ -88,19 +88,23 @@ export async function index(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function changeAvailability(req: Request, res: Response, next: NextFunction){
-    console.log(req.body)
-    if(!req.query){
+    
+    if(!req.params){
         next(new CustomError('Id is required', 400))
         return
     }
     const { id } = req.params
-   
+    const photo = await prisma.photo.findFirst({ where: { id: id }, select: { available: true } })
+    if(!photo){
+        next(new CustomError('Photo not found', 404))
+        return
+    }
     const photoUpdated = await prisma.photo.update({
         where: {id: id},
-        data: {available: req.body.available}
+        data: {available: !photo.available}
     })
     if(!photoUpdated){
-        next(new CustomError('Photo not found', 404))
+        next(new CustomError('Availability not edited', 404))
         return
     }
     res.json(

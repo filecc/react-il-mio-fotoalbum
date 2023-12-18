@@ -37,13 +37,11 @@ export default function Dashboard() {
   }, [url, actualPage, perPage]);
 
   const handleAvailability = async (id: string) => {
-    
-    const photo = info?.data.find(item => item.id === id)
+
     const res = await fetch(url + 'admin/photos/' + id, {
       credentials: "include",
       headers: { "Content-Type": "application/json"},
-      method: "POST",
-      body: JSON.stringify({available: photo?.available})
+      method: "POST"
     })
     const result = await res.json()
     console.log(result)
