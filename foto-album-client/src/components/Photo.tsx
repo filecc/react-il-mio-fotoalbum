@@ -34,8 +34,7 @@ const handleLike = async (id: string) => {
     method: "POST",
     credentials: "include",
   })
-  const result = await res.json()
-  console.log(result)
+  await res.json()
 
   setUpdate(!update)
 }

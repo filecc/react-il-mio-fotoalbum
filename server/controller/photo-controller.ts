@@ -227,7 +227,7 @@ export async function show(req: Request, res: Response, next: NextFunction) {
     return;
   }
   const photo_id = req.params.id;
-  const photo = await prisma.photo.findUniqueOrThrow({
+  const photo = await prisma.photo.findFirst({
     where: { id: photo_id },
     include: {
       categories: {
@@ -281,7 +281,7 @@ export async function deletePhoto(
 
   const photo_id = req.params.id;
   const user_id = req.cookies["user-id"];
-  const photo = await prisma.photo.findUniqueOrThrow({
+  const photo = await prisma.photo.findFirst({
     where: { id: photo_id, authorId: user_id },
     select: { link: true }
   }).catch((err) => {
@@ -322,7 +322,11 @@ export async function edit(req: Request, res: Response, next: NextFunction){
     }
     const { id } = req.params
     const user_id = req.cookies['user-id']
-    const oldPhoto = await prisma.photo.findUniqueOrThrow({ where: { id }, include: { categories: true}})
+    const oldPhoto = await prisma.photo.findFirst({ where: { id }, include: { categories: true}})
+    if(!oldPhoto){
+        next(new CustomError('Photo not found.', 501))
+        return
+    }
     const photo = new PhotoClass(title, description, visible, categories ? categories.split(',') : ["general"], oldPhoto.link)
    
     let isEditable = true

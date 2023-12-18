@@ -50,6 +50,7 @@ export default function Profile() {
         setPhotos(result.data);
       }
     }
+
     getUserPhoto();
   }, [update, url]);
 
@@ -76,11 +77,10 @@ export default function Profile() {
       credentials: "include",
     })
     const result = await res.json()
-    if (result.status == 200){
-      setUpdate(!update)
-    }
+    console.log(result)
     setLoadingDelete(false)
     setTarget('')
+    setUpdate(!update)
   }
 
   const handleFilter = () => {

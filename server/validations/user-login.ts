@@ -14,8 +14,10 @@ export = {
       },
       custom: {
         options: async (value: string) => {
-          const user = await prisma.user.findUniqueOrThrow({
+          const user = await prisma.user.findFirst({
             where: { email: value },
+          }).catch(err => {
+            throw new Error('Database not running.');
           })
           if(!user) throw new Error('User doesn\'t exist.');
         }
