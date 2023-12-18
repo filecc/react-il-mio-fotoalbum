@@ -8,10 +8,11 @@ import {
   ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
 import { classNames } from "../../lib/utils/functions";
+import { Switch } from "@headlessui/react";
 
 export default function Dashboard() {
   const [loading, setLoading] = useState<boolean>(true);
-  const [perPage, setPerPage] = useState<number>(1);
+  const [perPage, setPerPage] = useState<number>(3);
   const [actualPage, setActualPage] = useState<string | null>();
   const [info, setInfo] = useState<Pagination>();
 
@@ -34,6 +35,10 @@ export default function Dashboard() {
     };
     getPhotos();
   }, [url, actualPage, perPage]);
+
+  const handleAvailability = async (id: string) => {
+    console.log(id)
+  }
 
   if (loading) return <Loader />;
   if (!info) return <div>no photo to display</div>;
@@ -155,9 +160,34 @@ export default function Dashboard() {
                       {photo.author.email}
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <a href="#" className="text-blue-600 hover:text-blue-900">
-                        Edit<span className="sr-only"></span>
-                      </a>
+                      <Switch
+                        checked={photo.available}
+                        onChange={() => {
+                          const newData = info.data.map((item) => {
+                            if (item.id === photo.id) {
+                              item.available = !item.available;
+                            }
+                            return item;
+                          })
+                          setInfo({
+                            ...info, 
+                            data: newData
+                          })
+                          handleAvailability(photo.id)
+                        }}
+                        className={classNames(
+                          photo.available ? "bg-indigo-600" : "bg-gray-200",
+                          "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
+                        )}
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={classNames(
+                            photo.available ? "translate-x-5" : "translate-x-0",
+                            "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                          )}
+                        />
+                      </Switch>
                     </td>
                   </tr>
                 ))}
@@ -170,23 +200,23 @@ export default function Dashboard() {
                     disabled={!info.previousPage}
                     onClick={() => setActualPage(info.previousPage)}
                   >
-                    <ArrowLeftCircleIcon className={
-                      classNames(
+                    <ArrowLeftCircleIcon
+                      className={classNames(
                         info.previousPage ? "text-blue-500" : "text-gray-300",
                         "w-8 h-8"
-                      )
-                    } />
+                      )}
+                    />
                   </button>
                   <button
                     disabled={!info.nextPage}
                     onClick={() => setActualPage(info.nextPage)}
                   >
-                    <ArrowRightCircleIcon className={
-                      classNames(
+                    <ArrowRightCircleIcon
+                      className={classNames(
                         info.nextPage ? "text-blue-500" : "text-gray-300",
                         "w-8 h-8"
-                      )
-                    } />
+                      )}
+                    />
                   </button>
                 </div>
               )}
