@@ -7,7 +7,6 @@ import jwt from 'jsonwebtoken'
 import { prisma } from "../server"
 
 export async function register(req: Request, res: Response, next: NextFunction){
-    console.log(req.body)
 
     const validations : Result = validationResult(req);
     if(!validations.isEmpty()){
@@ -56,12 +55,16 @@ export async function login(req: Request, res: Response, next: NextFunction){
         return
     }
 
-
+    console.log(validations)
     const { email, password } = req.body
-    const user = await prisma.user.findFirstOrThrow({
+    const user = await prisma.user.findFirst({
         where: { email: email },
         select: { email: true, id: true, password: true}
     })
+    if(!user){
+        next(new CustomError('User not found. Sorry.', 500))
+        return
+    }
     const isPasswordValid = await comparePassword(password, user.password)
 
     if(!isPasswordValid){

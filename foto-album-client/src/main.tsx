@@ -16,6 +16,7 @@ import ErrorPage from "./error-page.tsx";
 import UserPublic from "./components/UserPublic.tsx";
 import Register from "./components/Register.tsx";
 import Home from "./components/admin/Home.tsx";
+import Dashboard from "./components/admin/Dashboard.tsx";
 
 const checkUserLogged = async () => {
   const res = await fetch("http://localhost:4000/user/isLogged", {
@@ -27,7 +28,6 @@ const checkUserLogged = async () => {
   }
   return true
 }
-
 const checkAdmin = async () => {
   const res = await fetch("http://localhost:4000/admin/", {
     credentials: "include",
@@ -91,7 +91,13 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <Home />,
-    loader: checkAdmin
+    loader: checkAdmin,
+    children: [
+      {
+        path: "dashboard",
+        element: <Dashboard />
+      }
+    ]
   }
 ]);
 
