@@ -37,7 +37,15 @@ export default function Dashboard() {
   }, [url, actualPage, perPage]);
 
   const handleAvailability = async (id: string) => {
-    console.log(id)
+    
+    const photo = info?.data.find(item => item.id === id)
+    const res = await fetch(url + 'admin/photos/' + id, {
+      credentials: "include",
+      method: "POST",
+      body: JSON.stringify({available: photo?.available})
+    })
+    const result = await res.json()
+    console.log(result)
   }
 
   if (loading) return <Loader />;
@@ -56,16 +64,18 @@ export default function Dashboard() {
         </div>
       </div>
       <div className="mt-8 flow-root">
-        <p>Results per Page</p>
+        
+        <div className="flex items-center justify-between gap-2 pb-6">
+        <p>Results per page</p>
         <div className="flex items-center gap-2">
-          {[1, 3, 5, 10].map((item) => {
+        {[1, 3, 5, 10].map((item) => {
             return (
               <button
                 className={classNames(
                   item === perPage
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-gray-700 hover:bg-gray-50",
-                  "w-12 h-12 grid place-items-center rounded disabled:bg-gray-200 transition-all duration-300"
+                    ? "bg-blue-600 text-white ring ring-blue-300"
+                    : "bg-blue-50 border border-blue-100 text-gray-500 hover:bg-gray-50",
+                  "w-8 h-8 text-xs grid place-items-center rounded-full disabled:bg-gray-200 transition-all duration-300"
                 )}
                 onClick={() => {
                   setPerPage(item);
@@ -78,6 +88,8 @@ export default function Dashboard() {
               </button>
             );
           })}
+        </div>
+         
         </div>
 
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -176,8 +188,8 @@ export default function Dashboard() {
                           handleAvailability(photo.id)
                         }}
                         className={classNames(
-                          photo.available ? "bg-indigo-600" : "bg-gray-200",
-                          "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
+                          photo.available ? "bg-blue-600" : "bg-red-600",
+                          "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
                         )}
                       >
                         <span
