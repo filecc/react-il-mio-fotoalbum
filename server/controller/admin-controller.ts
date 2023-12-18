@@ -15,7 +15,7 @@ export async function home(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function index(req: Request, res: Response, next: NextFunction) {
-    const { startIndex, maxIndex } = req.query
+    const { startIndex, maxIndex, perPage } = req.query
     const photos = await prisma.photo.findMany({
         include: {
             author: {
@@ -49,7 +49,7 @@ export async function index(req: Request, res: Response, next: NextFunction) {
     }
 
     const start = parseInt(startIndex as string)
-    const pagination = 1
+    const pagination = perPage ? parseInt(perPage as string) : 10
     const max = maxIndex ? parseInt(maxIndex as string) : pagination
     if(start > max){
         next(new CustomError('Start index must be less than max index', 400))
@@ -68,18 +68,17 @@ export async function index(req: Request, res: Response, next: NextFunction) {
         start: start,
     }
     const data = mappedPhotos.slice(index.start, max)
-    const nextPage = index.start + pagination < mappedPhotos.length ? `/admin/photos?startIndex=${index.start + pagination}&maxIndex=${max + pagination}` : null
-    const previousPage = index.start - pagination >= 0 ? `/admin/photos?startIndex=${index.start - pagination}&maxIndex=${max - pagination}` : null
+    const nextPage = index.start + pagination < mappedPhotos.length ? `admin/photos?startIndex=${index.start + pagination}&maxIndex=${max + pagination}&perPage=${pagination}` : null
+    const previousPage = index.start - pagination >= 0 ? `admin/photos?startIndex=${index.start - pagination}&maxIndex=${max - pagination}&perPage=${pagination}` : null
      
 
     res.json({
         code: 200,
         message: 'Photos found',
         error: false,
-        totals: photos.length,
-        start: index.start, 
-        max: max,
+        pages: Math.ceil(mappedPhotos.length / pagination),
         data,
+        total: photos.length,
         nextPage,
         previousPage
 

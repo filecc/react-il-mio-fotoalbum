@@ -21,3 +21,14 @@ interface FieldError {
     field: string;
     message: string;
 }
+
+interface Pagination{
+    pages: number;
+    nextPage: string | null;
+    previousPage: string | null;
+    data: Photo[]
+    code: number,
+    message: string,
+    error: boolean,
+    total: number
+}
